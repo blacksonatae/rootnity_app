@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Index halaman yang akan dipilih
 
+  // List Widget pada halaman yang akan dipilih
   final List<Widget> _pages = [
     Center(child: Text("Devices Page", style: TextStyle(fontSize: 20))),
     Center(child: Text("Profile Page", style: TextStyle(fontSize: 20))),
