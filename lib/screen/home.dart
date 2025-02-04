@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'options/showAddOptions.dart';
+import 'options/showOptions.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Index halaman yang akan dipilih
 
+  final GlobalKey _menuKey = GlobalKey(); // Key untuk mengetahui posisi tombol
+
   // List Widget pada halaman yang akan dipilih
   final List<Widget> _pages = [
     Center(child: Text("Devices Page", style: TextStyle(fontSize: 20))),
@@ -20,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -44,8 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.black),
                       ),
                       GestureDetector(
+                        key: _menuKey,
                         onTap: () {
-
+                          ShowOptions.showMenuUser(context, _menuKey);
                         },
                         child: Icon(
                           Icons.arrow_drop_down_rounded,
