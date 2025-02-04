@@ -12,13 +12,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Text(
-          'Devices Pages',
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
+      body: Column(
+        children: [
+          
+        ],
       ),
     );
   }
