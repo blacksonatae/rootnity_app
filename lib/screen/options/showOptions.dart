@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ShowOptions {
-  //
+  // Menampilkan menu popup menu untuk logout saat menekan button
   static void showMenuUser(BuildContext context, GlobalKey key) {
     final RenderBox renderBox =
         key.currentContext!.findRenderObject() as RenderBox;
@@ -23,22 +23,22 @@ class ShowOptions {
           child: Text(
             "Logout",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12.0),
+            style: TextStyle(fontSize: 14.0),
           ),
-          onTap: () {
-          },
+          onTap: () {},
         ),
       ],
       color: Colors.white,
     );
   }
 
-  //
+  // Untuk menampilkan halaman Add menu saat menekan button add
   static void showAddOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
+          color: Colors.white,
           padding: EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
