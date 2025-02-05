@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/screen/home.dart';
-import 'package:rootnity_app/screen/options/showOptions.dart';
+import 'package:rootnity_app/screen/options/show_options.dart';
 import 'package:rootnity_app/screen/profile.dart';
 
 void main() {
