@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/screen/auth/login.dart';
 import 'package:rootnity_app/screen/home.dart';
 import 'package:rootnity_app/screen/options/show_options.dart';
 import 'package:rootnity_app/screen/profile.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primaryColor: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }
