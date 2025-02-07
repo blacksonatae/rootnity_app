@@ -2,33 +2,37 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = "https://655f-2001-448a-10e9-3016-25df-e3ad-510e-1c6f.ngrok-free.app/api";
+  final String baseUrl = "https://28da-116-90-214-39.ngrok-free.app/api";
 
   /*
   * Register pengguna dengan input nama pengguna, email, password, dan confirmation password
   * */
   Future<Map<String, dynamic>?> register(String name, String email, String password, String confirmPassword) async {
     // response
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'password': password,
+          'confirm_password': confirmPassword,
+        }),
+      );
 
-    return null;
-    /*final response = await http.post(
-      Uri.parse('$baseUrl/register'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        'name': name,
-        'email': email,
-        'password': password,
-        'confirm_password': confirmPassword,
-      }),
-    );
-
-    if (response.statusCode == 201) {
-      print("${jsonDecode(response.body)}");
-      return jsonDecode(response.body);
-     } else {
-      print("error");
-      return null;
-    }*/
+      final responseData = jsonDecode(response.body);
+      if (response.statusCode == 201 || response.statusCode == 202) {
+        print("Register sukses: $responseData");
+        return responseData;
+      } else {
+        print("Register gagal: ${responseData['message']}");
+        return {'error': responseData['message']};
+      }
+    } catch (e) {
+      print("Error saat register: $e");
+      return {'error': 'Terjadi kesalahan, coba lagi'};
+    }
   }
 
   /*
