@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/services/auth_services.dart';
 import 'login.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -16,6 +17,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool obscurePasswordText = true;
   bool obscureConfirmPasswordText = true;
+
+  void _register() async {
+    if (namaPengguna.text.isEmpty ||
+        email.text.isEmpty ||
+        password.text.isEmpty ||
+        confirmPassword.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Semua bidang harus diisi'))
+      );
+      return;
+    }
+
+    if (password.text != confirmPassword.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password tidak cocok'))
+      );
+      return;
+    }
+
+    var response = await AuthService().register(
+        namaPengguna.text, email.text, password.text, confirmPassword.text
+    );
+
+    if (response != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registrasi Berhasil!'))
+      );
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginScreen())
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registrasi gagal, coba lagi'))
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-
+                        _register();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF181C14),
