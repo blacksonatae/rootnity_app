@@ -66,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
                       * */
                     children: [
                       Text(
-                        'Kazuya',
+                        'Kazuya', // Nama user
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,

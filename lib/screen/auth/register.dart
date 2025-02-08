@@ -16,8 +16,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController password = new TextEditingController();
   final TextEditingController confirmPassword = new TextEditingController();
 
-  bool obscurePasswordText = true;
-  bool obscureConfirmPasswordText = true;
 
   void _register() async {
     await AuthService().register(
@@ -44,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             const SizedBox(height: 5), // dikasih jarak
+
             // Konten form login
             Padding(
               padding: EdgeInsets.all(30.0),
@@ -57,10 +56,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+
                   // Nama Pengguna
                   CustomTextField(
-                      controller: namaPengguna, label: 'Nama Pengguna'),
+                      controller: namaPengguna, label: 'Nama Pengguna',),
                   const SizedBox(height: 15),
+
                   // Email
                   CustomTextField(
                     controller: email,
@@ -68,18 +69,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 15),
                   // Password
+
                   CustomTextField(
                     controller: password,
                     label: 'Password',
                     isPassword: true,
                   ),
                   const SizedBox(height: 15),
+
                   // Confirm Password
                   CustomTextField(
                     controller: confirmPassword,
                     label: 'Confirm Password',
                     isPassword: true,
                   ),
+
                   // Tombol Register
                   const SizedBox(height: 20),
                   SizedBox(
