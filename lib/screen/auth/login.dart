@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/screen/Custom/custom_text_field.dart';
 import 'package:rootnity_app/screen/auth/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,40 +45,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 30),
                   // Email input
-                  TextField(
+                  CustomTextField(
                     controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
+                    label: 'Email',
                   ),
                   const SizedBox(height: 30),
                   // Password
-                  TextField(
+                  CustomTextField(
                     controller: passwordController,
-                    obscureText: obscureText,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
-                        },
-                        icon: Icon(obscureText
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
+                    label: 'Password',
+                    isPassword: true,
                   ),
                   const SizedBox(height: 30),
                   SizedBox(

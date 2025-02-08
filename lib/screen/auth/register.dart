@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/screen/Custom/custom_text_field.dart';
 import 'package:rootnity_app/services/auth_services.dart';
 import 'login.dart';
 
@@ -19,41 +20,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool obscureConfirmPasswordText = true;
 
   void _register() async {
-    if (namaPengguna.text.isEmpty ||
-        email.text.isEmpty ||
-        password.text.isEmpty ||
-        confirmPassword.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Semua bidang harus diisi'))
-      );
-      return;
-    }
-
-    if (password.text != confirmPassword.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password tidak cocok'))
-      );
-      return;
-    }
-
-    var response = await AuthService().register(
-        namaPengguna.text, email.text, password.text, confirmPassword.text
+    await AuthService().register(
+      namaPengguna.text,
+      email.text,
+      password.text,
+      confirmPassword.text,
     );
-
-    if (response != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registrasi Berhasil!'))
-      );
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen())
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registrasi gagal, coba lagi'))
-      );
-    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,70 +58,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   // Nama Pengguna
-                  TextField(
-                    controller: namaPengguna,
-                    decoration: InputDecoration(
-                      labelText: 'Nama Pengguna',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
+                  CustomTextField(
+                      controller: namaPengguna, label: 'Nama Pengguna'),
                   const SizedBox(height: 15),
                   // Email
-                  TextField(
+                  CustomTextField(
                     controller: email,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                    label: 'Email',
                   ),
                   const SizedBox(height: 15),
                   // Password
-                  TextField(
+                  CustomTextField(
                     controller: password,
-                    obscureText: obscurePasswordText,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            obscurePasswordText = !obscurePasswordText;
-                          });
-                        },
-                        icon: Icon(
-                          obscurePasswordText ? Icons.visibility : Icons.visibility_off,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                    label: 'Password',
+                    isPassword: true,
                   ),
                   const SizedBox(height: 15),
-                  // Password
-                  TextField(
+                  // Confirm Password
+                  CustomTextField(
                     controller: confirmPassword,
-                    obscureText: obscureConfirmPasswordText,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            obscureConfirmPasswordText = !obscureConfirmPasswordText;
-                          });
-                        },
-                        icon: Icon(
-                          obscureConfirmPasswordText ? Icons.visibility : Icons.visibility_off,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                    label: 'Confirm Password',
+                    isPassword: true,
                   ),
+                  // Tombol Register
                   const SizedBox(height: 20),
                   SizedBox(
                     width: 200,
@@ -179,16 +111,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const LoginScreen()
-                        ),
+                            builder: (context) => const LoginScreen()),
                       );
                     },
                     child: Text(
                       "Sudah ada akun ? login",
                       style: TextStyle(
                           color: Color(0xFF6EC207),
-                          decoration: TextDecoration.none
-                      ),
+                          decoration: TextDecoration.none),
                     ),
                   ),
                 ],
