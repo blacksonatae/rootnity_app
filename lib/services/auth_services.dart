@@ -1,73 +1,56 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthService {
-  final String baseUrl = "https://69b5-116-90-214-39.ngrok-free.app/api";
+import 'api_services.dart';
 
-  /*
-  * Register pengguna dengan input nama pengguna, email, password, dan confirmation password
-  * */
-  Future<Map<String, dynamic>?> register(String name, String email,
-      String password, String confirmPassword) async {
-    try {
-      // Tampilkan data input yang dikirim
-      final requestBody = jsonEncode({
-        'name': name,
-        'email': email,
-        'password': password,
-        'confirm_password': confirmPassword,
-      });
+class AuthServices {
+  // Login
+  Future<Map<String, dynamic>?> login(String email, String password) async {
+    final response = await APIServices.postData('/login', {
+      'email': email,
+      'password': password,
+    });
 
-      print("Request Body: $requestBody");
+    final responseData = jsonDecode(response.body);
+    print(responseData);
 
-      final response = await http.post(
-        Uri.parse('$baseUrl/register'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'password': password,
-          'confirm_password': confirmPassword,
-        }),
-      );
-
-      final responseData = jsonDecode(response.body);
-
-      print(response.body);
-      if (response.statusCode == 201) {
-        print("Login berhasil: ${responseData["data"]}");
-        // Registrasi berhasil
-        return {
-          "data": responseData["data"],
-        };
-      } else if (response.statusCode == 422) {
-        print("errors: ${responseData["errors"]}");
-        // Validasi gagal, kirim pesan error
-        return {
-          "errors": responseData["errors"],
-        };
-      } else {
-        print("errors: ${responseData["errors"]}");
-        return {
-          "errors": responseData["errors"],
-        };
-      }
-    } catch (e) {
-      print("errors: $e");
-      return {
-        "errors": e,
-      };
+    if (response.statusCode == 200) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      // Simpan token & nama user di local storage
+      await preferences.setString('token', responseData['data']['token']);
+      await preferences.setString('name', responseData['data']['name']);
+      await preferences.setString('email', responseData['data']['email']);
+      return {'status': true};
+    } else {
+      return {'status': false, 'errors': responseData['errors']};
     }
   }
 
-  /*
-  * Login pengguan dengan input email dan password
-  * */
-  Future<Map<String, dynamic>?> login(String email, String password) async {
-    // response
+  // Register
+  Future<Map<String, dynamic>?> register(String name, String email, String password, String confirmPassword) async {
+    final response = await APIServices.postData('/register',{
+      'name': name,
+      'email': email,
+      'password': password,
+      'confirm_password': confirmPassword,
+    });
 
-    return null;
+    final responseData = jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      // Simpan token & nama user di local storage
+      await preferences.setString('token', responseData['data']['token']);
+      await preferences.setString('name', responseData['data']['name']);
+      await preferences.setString('email', responseData['data']['email']);
+      return {'status': true};
+    } else {
+      return {'status': false, 'errors': responseData['errors']};
+    }
+  }
+
+  // Logout
+  static Future<void> logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear(); // Hapus semua data saat logout
   }
 }

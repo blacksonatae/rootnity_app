@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/screen/Custom/custom_text_field.dart';
-import 'package:rootnity_app/screen/auth/register.dart';
+import 'package:rootnity_app/main.dart';
+import 'package:rootnity_app/services/auth_services.dart';
+import 'package:rootnity_app/ui/screens/auth/register.dart';
+import 'package:rootnity_app/ui/screens/layout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../widget/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,10 +15,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
-  bool obscureText = true; // Untuk menghidden password
+  Map<String, dynamic>? errors;
+
+  void _login() async {
+    final result = await AuthServices().login(
+      email.text,
+      password.text,
+    );
+
+    if (result != null && result['status'] == false) {
+      print("Terjadi kesalahan, user tidak bisa masuk ke halaman screen");
+      setState(() {
+        errors = result['errors'] ?? {};
+      });
+    }
+
+    if (result != null && result['status'] == true) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LayoutsScreen()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20), // dikasih jarak
             // Konten form login
             Padding(
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               child: Column(
                 children: [
                   const Text(
@@ -46,15 +72,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 30),
                   // Email input
                   CustomTextField(
-                    controller: emailController,
+                    controller: email,
                     label: 'Email',
+                    errorText: errors?['email']?.first,
                   ),
                   const SizedBox(height: 30),
                   // Password
                   CustomTextField(
-                    controller: passwordController,
+                    controller: password,
                     label: 'Password',
                     isPassword: true,
+                    errorText: errors?['password']?.first,
+                    /*errorText: errors['password'] != null ? errors['password'][0] : null,*/
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
@@ -63,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(
-                          Color(0xFF181C14),
+                          const Color(0xFF181C14),
                         ),
                         foregroundColor:
                             WidgetStateProperty.all<Color>(Colors.white),
@@ -73,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {},
-                      child: Text(
+                      onPressed: _login,
+                      child: const Text(
                         "Login",
                         style: TextStyle(
                           fontSize: 16,
@@ -95,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       "Belum ada akun? register",
                       style: TextStyle(
                           fontWeight: FontWeight.w400,

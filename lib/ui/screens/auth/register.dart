@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/screen/Custom/custom_text_field.dart';
-import 'package:rootnity_app/services/auth_services.dart';
-import 'login.dart';
+import 'package:rootnity_app/ui/screens/auth/login.dart';
+
+import '../../../services/auth_services.dart';
+import '../../widget/custom_text_field.dart';
+import '../layout.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,19 +13,34 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController namaPengguna = new TextEditingController();
-  final TextEditingController email = new TextEditingController();
-  final TextEditingController password = new TextEditingController();
-  final TextEditingController confirmPassword = new TextEditingController();
+  final TextEditingController name = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
 
+  Map<String, dynamic>? errors;
 
   void _register() async {
-    await AuthService().register(
-      namaPengguna.text,
+    final result = await AuthServices().register(
+      name.text,
       email.text,
       password.text,
-      confirmPassword.text,
+      confirmPassword.text
     );
+
+    if (result != null && result['status'] == false) {
+      print("Terjadi kesalahan, user tidak bisa masuk ke halaman screen");
+      setState(() {
+        errors = result['errors'] ?? {};
+      });
+    }
+
+    if (result != null && result['status'] == true) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LayoutsScreen()),
+      );
+    }
   }
 
   @override
@@ -59,13 +76,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Nama Pengguna
                   CustomTextField(
-                      controller: namaPengguna, label: 'Nama Pengguna',),
+                    controller: name,
+                    label: 'Nama Pengguna',
+                    errorText: errors?['name']?.first,
+                  ),
                   const SizedBox(height: 15),
 
                   // Email
                   CustomTextField(
                     controller: email,
                     label: 'Email',
+                    errorText: errors?['email']?.first,
                   ),
                   const SizedBox(height: 15),
                   // Password
@@ -73,6 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomTextField(
                     controller: password,
                     label: 'Password',
+                    errorText: errors?['password']?.first,
                     isPassword: true,
                   ),
                   const SizedBox(height: 15),
@@ -81,6 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomTextField(
                     controller: confirmPassword,
                     label: 'Confirm Password',
+                    errorText: errors?['confirm_password']?.first,
                     isPassword: true,
                   ),
 
