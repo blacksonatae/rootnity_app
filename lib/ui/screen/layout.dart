@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:rootnity_app/core/themes.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
+=======
+>>>>>>> Stashed changes
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({super.key});
@@ -10,6 +13,7 @@ class LayoutScreen extends StatefulWidget {
 }
 
 class _LayoutScreenState extends State<LayoutScreen> {
+<<<<<<< Updated upstream
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +72,34 @@ class _LayoutScreenState extends State<LayoutScreen> {
           ),
         ],
       ),
+=======
+  final int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    const Center(child: Text("Home Page"),),
+    const Center(child: Text("Profile Page"),),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: Text("Oke"),),
+    );
+  }
+
+  // Widget Header
+  Widget _buildHeader() {
+    return Container();
+  }
+
+  // Widget Footer
+  Widget _buildBottomNav() {
+    return BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      items: const [
+
+      ],
+>>>>>>> Stashed changes
     );
   }
 }
