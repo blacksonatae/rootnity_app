@@ -16,11 +16,17 @@ class _LayoutScreenState extends State<LayoutScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          children: [_buildHeader(), Expanded(child: const HomeScreen())],
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: const HomeScreen(),
+            ),
+          ],
         ),
       ),
     );
   }
+
   /*
   * Header */
   Widget _buildHeader() {

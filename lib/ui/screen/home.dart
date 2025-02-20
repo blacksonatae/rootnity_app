@@ -24,38 +24,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: Row(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              controller: _scrollController,
-              itemCount: sectors.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    print("${sectors[index]} is clicked");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text(
-                      sectors[index],
-                      style: TextStyle(
-                          fontSize: 16
-                      ),
+          // List Sectors
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 40,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    controller: _scrollController,
+                    itemCount: sectors.length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 25,
                     ),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          onTap: () {
+                            print("${sectors[index]} is Clicked");
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              sectors[index],
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ));
+                    },
                   ),
-                );
-              },
+                ),
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {},
+                child: Icon(Icons.view_list_rounded),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Center(
+              child: Text("Devices"),
             ),
           ),
-          Container(
-            child: Text("Center"),
-          )
         ],
       ),
     );
