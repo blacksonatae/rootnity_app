@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
+import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({super.key});
@@ -42,27 +43,33 @@ class _LayoutScreenState extends State<LayoutScreen> {
                 "Kazuya",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: 16.3,
                   color: Themes.eerieBlack,
                 ),
               ),
               // button untuk logout
-              GestureDetector(
-                onTap: () {
-                  print("Logout Clicked !!!");
-                },
-                child: Icon(
-                  Icons.arrow_drop_down_rounded,
-                  color: Themes.eerieBlack,
-                  size: 30,
-                ),
-              )
+              CustomPopupmenu(
+                menuItems: [
+                  PopupMenuItem(
+                    child: Text("Logout"),
+                  ),
+                ],
+                offset: Offset(-60, 30),
+                child: Icon(Icons.arrow_drop_down_rounded),
+              ),
             ],
           ),
-          GestureDetector(
-            onTap: () {
-              print("Add Button Clicked !!!");
-            },
+          // button untuk add sektor dan devices
+          CustomPopupmenu(
+            menuItems: [
+              PopupMenuItem(
+                child: Text("Tambah Sektor"),
+              ),
+              PopupMenuItem(
+                child: Text("Tambah Perangkat"),
+              ),
+            ],
+            offset: Offset(-150, 30),
             child: Icon(
               Icons.add_circle_outline,
               color: Themes.eerieBlack,
