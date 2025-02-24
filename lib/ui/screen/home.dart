@@ -1,6 +1,7 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
+import 'package:rootnity_app/ui/screen/sectors/sector_manage.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,7 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   String showNameSectors(String nameSectors) {
-    return (nameSectors.length > 12) ? "${nameSectors.substring(0, 12)}..." : nameSectors;
+    return (nameSectors.length > 12)
+        ? "${nameSectors.substring(0, 12)}..."
+        : nameSectors;
   }
 
   @override
@@ -71,6 +74,73 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(width: 10),
+              CustomPopupmenu(
+                menuItems: [
+                  PopupMenuItem(
+                    enabled: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 150,
+                            maxHeight: 200,
+                          ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                sectors.length,
+                                (index) => PopupMenuItem(
+                                  child: Text(
+                                    showNameSectors(sectors[index]),
+                                  ),
+                                  onTap: () {
+                                    print("${sectors[index]} dipilih");
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Divider tetap di bawah
+                        PopupMenuDivider(),
+                        // "Pengaturan" tetap di bawah
+                        PopupMenuItem(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Kelola Sektor",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              Icon(
+                                BootstrapIcons.tablet,
+                                size: 14,
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            print("Kelola Sektor ditekan");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SectorManagers()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                offset: Offset(-145, 5),
+                child: Container(
+                  child: Icon(
+                    BootstrapIcons.list,
+                    size: 24,
+                  ),
+                ),
+              ),
             ],
           ),
           /*

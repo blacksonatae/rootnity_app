@@ -13,7 +13,7 @@ class CustomPopupmenu extends StatelessWidget {
     super.key,
     required this.menuItems,
     required this.child,
-    required this.offset,
+    this.offset = const Offset(40, 0),
   });
 
   @override
