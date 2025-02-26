@@ -64,6 +64,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
             menuItems: [
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
+                onTap: () {
+                },
               ),
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/ui/screen/layout.dart';
+import 'package:rootnity_app/ui/screen/layouts/layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
