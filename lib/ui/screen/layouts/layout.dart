@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
+import 'package:rootnity_app/ui/screen/sectors/sectors_manager.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 
 class LayoutScreen extends StatefulWidget {
@@ -65,6 +66,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
                 onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SectorsManager()));
                 },
               ),
               PopupMenuItem(
