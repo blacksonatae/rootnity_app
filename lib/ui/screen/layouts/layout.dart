@@ -72,6 +72,9 @@ class _LayoutScreenState extends State<LayoutScreen> {
               ),
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),
+                onTap: () {
+                  
+                }
               ),
             ],
             offset: Offset(-150, 30),
