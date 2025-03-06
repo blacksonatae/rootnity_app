@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
+import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
-import 'package:rootnity_app/ui/screen/sectors/add_sectors.dart';
-import 'package:rootnity_app/ui/screen/sectors/sectors_manager.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../sectors/add_sectors.dart';
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({super.key});
@@ -13,6 +15,25 @@ class LayoutScreen extends StatefulWidget {
 }
 
 class _LayoutScreenState extends State<LayoutScreen> {
+
+  String _userName = "User";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserName();
+  }
+
+  void _loadUserName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String fullName = preferences.getString('name') ?? "User";
+    print(fullName);
+    setState(() {
+      _userName = (fullName.length > 12) ? "${fullName.substring(0, 12)}..." : fullName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +63,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
             children: [
               // nama user or username
               Text(
-                "Kazuya",
+                _userName,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16.3,
@@ -54,6 +75,9 @@ class _LayoutScreenState extends State<LayoutScreen> {
                 menuItems: [
                   PopupMenuItem(
                     child: Text("Logout"),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                    },
                   ),
                 ],
                 offset: Offset(-60, 30),

@@ -1,7 +1,6 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
-import 'package:rootnity_app/ui/screen/sectors/sectors_manager.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -123,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onTap: () {
                             print("Kelola Sektor ditekan");
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SectorsManager()));
+                            /*Navigator.push(context, MaterialPageRoute(builder: (context) => SectorsManager()));*/
                           },
                         ),
                       ],

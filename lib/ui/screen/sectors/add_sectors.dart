@@ -12,7 +12,24 @@ class AddSectors extends StatefulWidget {
 }
 
 class _AddSectorsState extends State<AddSectors> {
-  final TextEditingController sectorsController = new TextEditingController();
+  bool isButtonDisabled = true;
+
+  final TextEditingController sectorsController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sectorsController.addListener(() {
+      setState(() {
+        isButtonDisabled = sectorsController.text.isEmpty || sectorsController.text.contains(RegExp(r'[^\w]')) || sectorsController.text.contains(r'[^a-zA-Z0-9]');
+      });
+    });
+  }
+
+  void _addSectors() {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +50,19 @@ class _AddSectorsState extends State<AddSectors> {
               fontSize: 15,
               color: Themes.eerieBlack),
         ),
-        SizedBox(),
+        GestureDetector(
+          onTap: isButtonDisabled ? null : () {
+            _addSectors();
+          },
+          child: Icon(
+            Icons.check,
+            color: isButtonDisabled ? Themes.seasalt : Themes.brandeisBlue,
+          ),
+        ),
       ],
       body: [
-        CustomTextField(controller: sectorsController, label: "Masukkan Sektor"),
+        CustomTextField(
+            controller: sectorsController, label: "Masukkan Sektor"),
       ],
     );
   }
