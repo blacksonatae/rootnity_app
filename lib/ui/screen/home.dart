@@ -11,7 +11,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final PageController _pageController = PageController();
   final ScrollController _scrollController = ScrollController();
+
+  int _sectorCurrentIndex = 0; // Indeks pada sektor
 
   final List<String> sectors = [
     "Home",
@@ -30,6 +33,34 @@ class _HomeScreenState extends State<HomeScreen> {
     return (nameSectors.length > 12)
         ? "${nameSectors.substring(0, 12)}..."
         : nameSectors;
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _sectorCurrentIndex = index;
+    });
+
+    _scrollToCurrentSector(index);
+  }
+
+  void _onSectorTapped(int index) {
+    setState(() {
+      _sectorCurrentIndex = index;
+    });
+
+    _pageController.jumpToPage(index); // Pindah langsung tanpa animasi
+    _scrollToCurrentSector(index); // Pastikan sektor terlihat
+  }
+
+  void _scrollToCurrentSector(int index) {
+    double itemWidth = 120; // Sesuaikan dengan ukuran sektor
+    double offset = (index * itemWidth) -
+        (MediaQuery.of(context).size.width / 2 - itemWidth / 2);
+    _scrollController.animateTo(
+      offset.clamp(0, _scrollController.position.maxScrollExtent),
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -54,17 +85,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 25,
                     ),
                     itemBuilder: (context, index) {
+                      bool isSelected = _sectorCurrentIndex == index;
                       return GestureDetector(
                         onTap: () {
-                          print("${sectors[index]} is Clicked");
+                          _onSectorTapped(index);
                         },
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
                             showNameSectors(sectors[index]),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: isSelected
+                                    ? Themes.eerieBlack
+                                    : Themes.seasalt,
+                                fontWeight: isSelected
+                                    ? FontWeight.w500
+                                    : FontWeight.normal),
                           ),
                         ),
                       );
@@ -95,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     showNameSectors(sectors[index]),
                                   ),
                                   onTap: () {
+                                    _onSectorTapped(index);
                                     print("${sectors[index]} dipilih");
                                   },
                                 ),
@@ -137,38 +175,52 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+          SizedBox(height: 20),
           /*
           * Buatkan bentuk card
           * */
-          SizedBox(height: 20),
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            color: Colors.white,
-            child: Container(
-              padding: EdgeInsets.all(18.0),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Image.asset(
-                    'images/plant_design.png',
-                    fit: BoxFit.cover,
-                    width: 200,
-                    height: 100,
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                _onPageChanged(index);
+              },
+              itemCount: sectors.length,
+              itemBuilder: (context, index) {
+                return SingleChildScrollView(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    color: Colors.white,
+                    child: Container(
+                      padding: EdgeInsets.all(18.0),
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'images/plant_design.png',
+                            fit: BoxFit.cover,
+                            width: 200,
+                            height: 100,
+                          ),
+                          SizedBox(height: 18),
+                          Text(
+                            "Tidak Ada Perangkat",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Themes.seasalt,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 18),
-                  Text(
-                    "Tidak Ada Perangkat",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Themes.seasalt),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          )
+          ),
         ],
       ),
     );
