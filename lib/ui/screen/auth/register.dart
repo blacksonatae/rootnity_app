@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/services/auth_services.dart';
+import 'package:rootnity_app/ui/screen/auth/auth_layout.dart';
 import 'package:rootnity_app/ui/screen/auth/login.dart';
-import 'package:rootnity_app/ui/screen/home.dart';
 import 'package:rootnity_app/ui/screen/layouts/layout.dart';
-
-import '../../widget/custom_text_field.dart';
+import 'package:rootnity_app/ui/widget/custom_elevated_button.dart';
+import 'package:rootnity_app/ui/widget/custom_text_field.dart';
+import 'package:rootnity_app/ui/widget/custom_toast.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -19,142 +20,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
 
-  Map<String, dynamic>? errors;
+  Map<String, dynamic>? errors; //.. errors
 
+  //.. Method Register
   void _register() async {
-    final result = await AuthServices().register(
-      name.text, email.text, password.text, confirmPassword.text
-    );
-
-    print(result);
-
-    print(result?['status']);
+    final result = await AuthServices()
+        .register(name.text, email.text, password.text, confirmPassword.text);
 
     if (result != null && result['status'] == false) {
       setState(() {
         errors = result['errors'] ?? {};
       });
+      if (result['errors-type'] == 'mains') {
+        CustomToast.show(context,
+            "Terjadi kesalahan, silahkan hubungin customer services", 'error');
+      }
     }
 
     if (result != null && result['status'] == true) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => LayoutScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LayoutScreen()));
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Background Images
-            AspectRatio(
-              aspectRatio: 1.25,
-              child: Image.asset(
-                'images/pexels-pixabay-247599.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 5), // dikasih jarak
-
-            // Konten form login
-            Padding(
-              padding: EdgeInsets.all(30.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Register',
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Nama Pengguna
-                  CustomTextField(
-                    controller: name,
-                    label: 'Nama Pengguna',
-                    errorText: errors?['name']?.first,
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Email
-                  CustomTextField(
-                    controller: email,
-                    label: 'Email',
-                    errorText: errors?['email']?.first,
-                  ),
-                  const SizedBox(height: 15),
-                  // Password
-
-                  CustomTextField(
-                    controller: password,
-                    label: 'Password',
-                    errorText: errors?['password']?.first,
-                    isPassword: true,
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Confirm Password
-                  CustomTextField(
-                    controller: confirmPassword,
-                    label: 'Confirm Password',
-                    errorText: errors?['confirm_password']?.first,
-                    isPassword: true,
-                  ),
-
-                  // Tombol Register
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: 200,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _register();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF181C14),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Register",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Sudah ada akun ? login",
-                      style: TextStyle(
-                          color: Color(0xFF6EC207),
-                          decoration: TextDecoration.none),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return AuthLayout(
+      title: "Register",
+      backgroundImages: "images/pexels-mdsnmdsnmdsn-1216345.jpg",
+      body: [
+        const SizedBox(height: 25),
+        //.. Name
+        CustomTextField(
+          controller: name,
+          label: "Name",
+          errorText: errors?['name']?.first,
         ),
-      ),
+        const SizedBox(height: 20),
+        //.. Email
+        CustomTextField(
+          controller: email,
+          label: "Email",
+          errorText: errors?['email'].first,
+        ),
+        const SizedBox(height: 20),
+        //.. Password
+        CustomTextField(
+          controller: password,
+          label: "Password",
+          errorText: errors?['password']?.first,
+        ),
+        const SizedBox(height: 20),
+        //.. Confirm Password
+        CustomTextField(
+          controller: confirmPassword,
+          label: "Confirm Password",
+          errorText: errors?['confirm_passsword']?.first,
+        ),
+        const SizedBox(height: 20),
+        //.. Button Login
+        CustomElevatedButton(
+          nameButton: "Register",
+          onPressed: () => _register(),
+        ),
+        const SizedBox(height: 20),
+        //.. Button untuk mengarah halaman register
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+          child: const Text(
+            "Belum ada akun? register",
+            style: TextStyle(
+                fontWeight: FontWeight.w400, color: Color(0xFF6EC207)),
+          ),
+        )
+      ],
     );
   }
 }

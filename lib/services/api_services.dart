@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class APIServices {
-  static const String _baseUrl = "https://0630-180-254-173-205.ngrok-free.app/api";
+  // .. Url API Laravel
+  static const String _baseUrl = "https://dff5-103-47-133-71.ngrok-free.app/api";
 
   // .. Method Get
   static Future<http.Response> getData(String endpoint) async {
@@ -16,11 +17,8 @@ class APIServices {
   }
 
   // .. Method Post
-  static Future<http.Response> postData(
-      String endpoint, Map<String, dynamic> data) async {
+  static Future<http.Response> postData(String endpoint, Map<String, dynamic> data) async {
     var fullUrl = '$_baseUrl$endpoint';
-
-    print(await _setHeaders());
 
     return await http.post(
       Uri.parse(fullUrl),
@@ -34,7 +32,6 @@ class APIServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString('token');
 
-    print("Token dikirim: $token"); // Debugging
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
