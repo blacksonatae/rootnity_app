@@ -1,7 +1,9 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
+import 'package:rootnity_app/services/sectors_services.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,28 +13,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
   final PageController _pageController = PageController();
   final ScrollController _scrollController = ScrollController();
 
   int _sectorCurrentIndex = 0; // Indeks pada sektor
 
-  final List<String> sectors = [
-    "Home",
-    "Tora Farms",
-    "Hans",
-    "Halaman Belakang",
-    "Kevin Farms",
-    "Kedamaian Permai",
-    "Mayor Ruslan",
-    "Kazana",
-    "Farm Smasf",
-    "John Farms",
-  ];
+  // Gunakan initState agar data atau konten di load saat halaman dibuka
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchSectors();
+    _showToken();
+  }
 
+  List<String> sectors = [];
+
+  void _showToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    print(preferences.getString('token'));
+  }
   String showNameSectors(String nameSectors) {
     return (nameSectors.length > 12)
         ? "${nameSectors.substring(0, 12)}..."
         : nameSectors;
+  }
+  void _fetchSectors() async {
+    List<dynamic> sectorList = await SectorsServices.getSectors();
+    setState(() {
+      sectors = sectorList.map((sector) => sector['name_sectors'].toString()).toList();
+    });
   }
 
   void _onPageChanged(int index) {
@@ -95,13 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             showNameSectors(sectors[index]),
                             style: TextStyle(
-                                fontSize: 16,
-                                color: isSelected
-                                    ? Themes.eerieBlack
-                                    : Themes.seasalt,
-                                fontWeight: isSelected
-                                    ? FontWeight.w500
-                                    : FontWeight.normal),
+                              fontSize: 16,
+                              color: isSelected
+                                  ? Themes.eerieBlack
+                                  : Themes.seasalt,
+                              fontWeight: isSelected
+                                  ? FontWeight.w500
+                                  : FontWeight.normal,
+                            ),
                           ),
                         ),
                       );
