@@ -8,7 +8,7 @@ class CustomToast {
     // Menentukan warna berdasarkan tipe toast
     switch (type) {
       case 'success':
-        backgroundColor = Colors.green;
+        backgroundColor = Themes.kellyGreen;
         break;
       case 'error':
         backgroundColor = Colors.red;
@@ -67,7 +67,7 @@ class CustomToast {
     overlayState.insert(overlayEntry);
     animationController.forward(); // Animasi Fade In & Slide Down
 
-    Future.delayed(const Duration(seconds: 5), () async {
+    Future.delayed(const Duration(seconds: 3), () async {
       await animationController.reverse(); // Animasi Fade Out & Slide Up
       overlayEntry.remove();
     });

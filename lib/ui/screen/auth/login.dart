@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (result != null && result['status'] == true) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LayoutScreen()));
+      CustomToast.show(context, "Login Berhasil", "success");
     }
   }
 

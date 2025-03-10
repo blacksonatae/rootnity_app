@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class APIServices {
   // .. Url API Laravel
-  static const String _baseUrl = "https://dff5-103-47-133-71.ngrok-free.app/api";
+  static const String _baseUrl = "https://b8f7-180-254-173-205.ngrok-free.app/api";
 
   // .. Method Get
   static Future<http.Response> getData(String endpoint) async {
