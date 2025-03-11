@@ -1,18 +1,21 @@
-class Sectors {
+class Devices {
   String? id;
   final String name;
+  final String sectorsId;
 
-  //.. Buatkan constructor pada sectors untuk menyimpan data
-  Sectors({
+  //.. Buatkan constructors pada devices untuk menyimpan data
+  Devices({
     this.id,
     required this.name,
+    required this.sectorsId,
   });
 
   //.. Convert Json ke Object
-  factory Sectors.fromJson(Map<String, dynamic> json) {
-    return Sectors(
+  factory Devices.fromJson(Map<String, dynamic> json) {
+    return Devices(
       id: json['id'] ?? 0,
       name: json['name_sectors'] ?? '',
+      sectorsId: json['sectors_id'] ?? 0,
     );
   }
 
@@ -21,6 +24,7 @@ class Sectors {
     return {
       'id': id,
       'name_sectors': name,
+      'sectors_id': sectorsId,
     };
   }
 }
