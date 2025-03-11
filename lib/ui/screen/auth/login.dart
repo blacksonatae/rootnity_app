@@ -24,19 +24,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //.. Method login
   void _login() async {
-    final result = await AuthServices().login(email.text, password.text);
+    final result = await AuthServices.login(email.text, password.text, context);
 
-    if (result != null && result['status'] == false) {
+    print(result);
+
+    if (result['status'] == false) {
       setState(() {
         errors = result['errors'] ?? {};
       });
-      if (result['errors-type'] == 'mains') {
-        CustomToast.show(context,
-            "Terjadi kesalahan, silahkan hubungin customer services", 'error');
-      }
     }
 
-    if (result != null && result['status'] == true) {
+    if (result['status'] == true) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LayoutScreen()));
       CustomToast.show(context, "Login Berhasil", "success");

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/themes.dart';
 
 class CustomToast {
+  static final List<OverlayEntry> _toasts = []; //.. Gunakan list untuk antrian toast
+  //.. Fungsi show untuk menampilkan toast dengan memasukan parameter pesan dan jenis toast
   static void show(BuildContext context, String message, String type) {
-    Color backgroundColor;
+    if (context.mounted == false) return; //.. Pastikan context masih ada
 
+    Color backgroundColor; //.. Background color berdasarkan jenis toast
     // Menentukan warna berdasarkan tipe toast
     switch (type) {
       case 'success':
@@ -30,7 +33,7 @@ class CustomToast {
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: 80,
+        top: 20 + (_toasts.length * 60), //.. Menyesuaikan posisi agar setiap toast dalam antrian yang tidak tumpah tindih
         left: MediaQuery.of(context).size.width * 0.1,
         width: MediaQuery.of(context).size.width * 0.8,
         child: Material(
@@ -64,12 +67,18 @@ class CustomToast {
       ),
     );
 
+    _toasts.add(overlayEntry);
     overlayState.insert(overlayEntry);
+
     animationController.forward(); // Animasi Fade In & Slide Down
 
-    Future.delayed(const Duration(seconds: 3), () async {
-      await animationController.reverse(); // Animasi Fade Out & Slide Up
+    Future.delayed(const Duration(seconds: 5), () => _removeToast(overlayEntry));
+  }
+
+  static void _removeToast(OverlayEntry overlayEntry) {
+    if (_toasts.contains(overlayEntry)) {
       overlayEntry.remove();
-    });
+      _toasts.remove(overlayEntry);
+    }
   }
 }

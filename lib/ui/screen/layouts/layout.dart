@@ -3,6 +3,7 @@ import 'package:rootnity_app/core/themes.dart';
 import 'package:rootnity_app/services/auth_services.dart';
 import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
+import 'package:rootnity_app/ui/screen/sectors/add_sectors.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 import 'package:rootnity_app/ui/widget/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,7 +97,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
           CustomPopupmenu(
             menuItems: [
               PopupMenuItem(child: Text("Tambah Sektor"), onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddSectors()));
               }),
               PopupMenuItem(child: Text("Tambah Perangkat"), onTap: () {
 

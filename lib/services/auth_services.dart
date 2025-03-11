@@ -1,63 +1,72 @@
-import 'dart:convert';
+import 'package:rootnity_app/services/api_services.dart';
 import 'package:rootnity_app/ui/widget/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api_services.dart';
-
 class AuthServices {
+
   //.. Method login
-  Future<Map<String, dynamic>?> login(String email, password) async {
-    try {
-      final response = await APIServices.postData('/login', {
-        'email': email,
-        'password': password,
-      });
+  static Future<Map<String, dynamic>> login(String email, String password,
+      context) async {
+    var response = await APIServices.postData(
+        '/login',
+        {
+          'email': email,
+          'password': password,
+        },
+        context);
 
-      final responseData = jsonDecode(response.body);
+    if (response != null && response.statusCode == 200) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var data = response.data['data'];
 
-      if (response.statusCode == 200) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        //.. Simpan token & nama user di local storage / SharedPreferences
-        await preferences.setString('token', responseData['data']['token']);
-        await preferences.setString('name', responseData['data']['name']);
-        await preferences.setString('email', responseData['data']['email']);
-        return {'status': true};
-      } else if (response.statusCode == 500) {
-        return {'status': false, 'errors-type': 'mains'};
-      } else {
-        return {'status': false, 'errors': responseData['errors']};
-      }
-    } catch (e) {
-      return {'status': false, 'errors-type': 'mains'};
+      await preferences.setString('token', data['token']);
+      await preferences.setString('name', data['name']);
+      await preferences.setString('email', data['email']);
+
+      CustomToast.show(context, "Login berhasil", "success");
+      return {
+        'status': true
+      }; //.. Status kondisi jika true maka halaman login bisa mengarah ke halaman home
+    } else if (response != null && response.statusCode == 401) {
+      return {'status': false, 'errors': response.data['errors']}; //.. Menampilkan pesan error pada masing masing textfield
+    } else if (response != null && response.statusCode == 422) {
+      return {'status': false, 'errors': response.data['errors']}; //.. Menampilkan pesan error pada masing masing textfield
+    } else {
+      CustomToast.show(
+          context, "Registrasi gagal! Silahan coba lagi.", "error");
+
+      return {
+        'status': false
+      }; //.. Malah sebaliknya jika false maka halaman home tidak dapat diarahkan
     }
   }
 
-  //.. Method register
-  Future<Map<String, dynamic>?> register(String name, String email,
-      String password, String confirmPassword) async {
-    try {
-      final response = await APIServices.postData('/register', {
-        'name': name,
-        'email': email,
-        'password': password,
-        'confirm_password': confirmPassword,
-      });
+  //.. Method Register
+  static Future<Map<String, dynamic>> register(String name, String email,
+      String password, String confirmPassword, context) async {
+    var response = await APIServices.postData('/register', {
+      'name': name,
+      'email': email,
+      'password': password,
+      'confirm_password': confirmPassword,
+    }, context);
 
-      final responseData = jsonDecode(response.body);
+    if (response != null && response.statusCode == 201) {
+      var data = response.data['data'];
 
-      if (response.statusCode == 201) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        // Simpan token & nama user di local storage
-        await preferences.setString(
-            'token', responseData['token']); // Perbaiki disini
-        await preferences.setString('name', responseData['data']['name']);
-        await preferences.setString('email', responseData['data']['email']);
-        return {'status': true};
-      } else {
-        return {'status': false, 'errors': responseData['errors']};
-      }
-    } catch (e) {
-      return {'status': false, 'errors-type': 'mains'};
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.setString('token', data['token']);
+      await preferences.setString('name', data['name']);
+      await preferences.setString('email', data['email']);
+
+      CustomToast.show(context, "Register berhasil!", "success");
+      return {'status': true};
+    } else if (response != null && response.statusCode == 422) {
+      return {'status': false, 'errors': response.data['errors']};
+    } else {
+      CustomToast.show(
+          context, "Registrasi gagal! Silahan coba lagi.", "error");
+      return {'status': false};
     }
   }
 

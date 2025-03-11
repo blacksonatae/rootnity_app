@@ -5,7 +5,6 @@ import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/screen/layouts/layout.dart';
 import 'package:rootnity_app/ui/widget/custom_elevated_button.dart';
 import 'package:rootnity_app/ui/widget/custom_text_field.dart';
-import 'package:rootnity_app/ui/widget/custom_toast.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -24,20 +23,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   //.. Method Register
   void _register() async {
-    final result = await AuthServices()
-        .register(name.text, email.text, password.text, confirmPassword.text);
+    final result = await AuthServices
+        .register(name.text, email.text, password.text, confirmPassword.text, context);
 
-    if (result != null && result['status'] == false) {
+    if (result['status'] == false) {
       setState(() {
         errors = result['errors'] ?? {};
       });
-      if (result['errors-type'] == 'mains') {
-        CustomToast.show(context,
-            "Terjadi kesalahan, silahkan hubungin customer services", 'error');
-      }
     }
 
-    if (result != null && result['status'] == true) {
+    if (result['status'] == true) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LayoutScreen()));
     }
