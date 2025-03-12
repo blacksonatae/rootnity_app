@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class APIServices {
   //.. Url API Laravel
   static final _dio = Dio(
-    BaseOptions(baseUrl: "", headers: {
+    BaseOptions(baseUrl: "https://c23a-116-90-214-39.ngrok-free.app/api", headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }),

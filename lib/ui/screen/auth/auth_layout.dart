@@ -18,10 +18,11 @@ class AuthLayout extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //.. Backgound Images
             AspectRatio(
-              aspectRatio: 1.25,
+              aspectRatio: 1.45,
               child: Image.asset(
                 backgroundImagesUri,
                 fit: BoxFit.cover,
