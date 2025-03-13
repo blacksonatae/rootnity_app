@@ -1,5 +1,5 @@
 class Sectors {
-  String? id;
+  int? id;
   final String name;
 
   //.. Buatkan constructor pada sectors untuk menyimpan data
@@ -11,7 +11,7 @@ class Sectors {
   //.. Convert Json ke Object
   factory Sectors.fromJson(Map<String, dynamic> json) {
     return Sectors(
-      id: json['id'] ?? 0,
+      id: json['id'],
       name: json['name_sectors'] ?? '',
     );
   }

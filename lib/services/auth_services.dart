@@ -21,10 +21,10 @@ class AuthServices {
       return {
         'status': true
       }; //.. Status kondisi jika true maka halaman login bisa mengarah ke halaman home
-    } else if (response != null && response.statusCode == 422) {
+    } else if (response != null && response.statusCode == 422 || response?.statusCode == 401) {
       return {
         'status': false,
-        'errors': response.data['errors']
+        'errors': response?.data['errors']
       }; //.. Menampilkan pesan error pada masing masing textfield
     } else {
       return {
