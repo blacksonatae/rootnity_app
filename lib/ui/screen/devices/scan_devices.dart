@@ -10,10 +10,6 @@ import 'package:wifi_iot/wifi_iot.dart';
 * jika user menekan navigator pop maka otomatis cancel dan arduino wifi terputus
 * */
 class ScanDevices extends StatelessWidget {
-  List<WifiNetwork> wifiNetworks = [];
-  Timer? _scanTimer;
-
-  
   const ScanDevices({super.key});
 
   @override
