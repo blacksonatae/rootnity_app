@@ -45,9 +45,10 @@ class _AddSectorsState extends State<AddSectors> {
         Text(
           "Tambah Sektor",
           style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: ThemeApp.eerieBlack),
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: ThemeApp.eerieBlack,
+          ),
         ),
         GestureDetector(
           onTap: () => _addSectors(),

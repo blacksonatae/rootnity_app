@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme_app.dart';
+import 'package:rootnity_app/ui/screen/devices/scan_devices.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
 import 'package:rootnity_app/ui/screen/sectors/add_sectors.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
@@ -96,7 +97,10 @@ class _LayoutScreenState extends State<LayoutScreen> {
               ),
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),
-                onTap: () => (),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ScanDevices())),
               ),
             ],
             offset: Offset(-150, 30),
