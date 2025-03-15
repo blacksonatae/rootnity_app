@@ -17,9 +17,7 @@ class ScanWifi extends StatefulWidget {
 
 class _ScanWifiState extends State<ScanWifi> {
   List<Map<String, dynamic>> _wifiList = [];
-  String _status = "Disconnected";
-  String esp32Url = "http://192.168.4.2";
-  Timer? _statusTimer;
+  String esp32Url = "http://192.168.4.1"; // Gunakan IP yang benar
   bool _isConnectedToESP32 = false;
 
   @override
@@ -28,32 +26,26 @@ class _ScanWifiState extends State<ScanWifi> {
     _checkESP32Connection();
   }
 
-  @override
-  void dispose() {
-    _statusTimer?.cancel();
-    super.dispose();
-  }
-
   Future<void> _checkESP32Connection() async {
     String? ssid = await WiFiForIoTPlugin.getSSID();
     String? wifiIP = await WiFiForIoTPlugin.getIP();
-    print(wifiIP);
 
-    if (ssid == "Sabba-12" && wifiIP != null && wifiIP.startsWith("192.168.4.2")) {
+    print("Perangkat menggunakan IP: $wifiIP");
+
+    if (ssid != null && ssid.contains("Sabba-12")) {  // Pastikan SSID sesuai
       setState(() {
         _isConnectedToESP32 = true;
       });
-      print("Flutter terhubung ke ESP32! IP: $wifiIP");
+      print("Flutter terhubung ke ESP32 dengan IP: $wifiIP");
       _fetchWifiList();
     } else {
       setState(() {
         _isConnectedToESP32 = false;
       });
-      print("Flutter belum terhubung ke ESP32. Harap sambungkan dahulu.");
+      print("Flutter belum terhubung ke ESP32. Pastikan koneksi benar.");
     }
   }
 
-  /// Meminta daftar WiFi dari ESP32
   Future<void> _fetchWifiList() async {
     if (!_isConnectedToESP32) {
       print("Tidak terhubung ke ESP32, tidak dapat memindai WiFi.");
@@ -63,13 +55,14 @@ class _ScanWifiState extends State<ScanWifi> {
     try {
       print("Mengirim permintaan pemindaian WiFi ke ESP32...");
       final response = await http.get(Uri.parse("$esp32Url/scan"));
+
       if (response.statusCode == 200) {
         setState(() {
           _wifiList = List<Map<String, dynamic>>.from(jsonDecode(response.body)["wifi"]);
         });
         print("WiFi yang ditemukan: $_wifiList");
       } else {
-        print("ESP32 tidak merespons dengan benar.");
+        print("ESP32 tidak merespons dengan benar. Kode status: ${response.statusCode}");
       }
     } catch (e) {
       print("Gagal menghubungi ESP32: $e");

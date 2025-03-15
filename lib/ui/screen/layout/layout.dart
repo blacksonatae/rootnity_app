@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme_app.dart';
+import 'package:rootnity_app/services/auth_services.dart';
+import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/screen/devices/scan_devices.dart';
 import 'package:rootnity_app/ui/screen/home.dart';
 import 'package:rootnity_app/ui/screen/sectors/add_sectors.dart';
@@ -73,7 +75,13 @@ class _LayoutScreenState extends State<LayoutScreen> {
                 menuItems: [
                   PopupMenuItem(
                     child: Text("Logout"),
-                    onTap: () => print("Terkeluar"),
+                    onTap: () {
+                      AuthServices.logout();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
+                    },
                   ),
                 ],
                 offset: Offset(-60, 30),

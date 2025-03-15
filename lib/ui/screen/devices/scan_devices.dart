@@ -8,17 +8,7 @@ import 'package:rootnity_app/ui/screen/devices/scan_wifi.dart';
 import 'package:rootnity_app/ui/screen/layout/layout_no_mains.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 
-<<<<<<< HEAD
-/*
-* Scan Devices untuk mencari perangkat arduino ESP32
-* untuk menghubungkan dan mencari menggunaakan wifi
-* setelah terhubung user dapat menekan tombol centang untuk ke halaman penamaan
-* jika user menekan navigator pop maka otomatis cancel dan arduino wifi terputus
-* */
-class ScanDevices extends StatelessWidget {
-=======
 class ScanDevices extends StatefulWidget {
->>>>>>> a335fe51410725e807fe0ea011dff5f6bf2bedcd
   const ScanDevices({super.key});
 
   @override
@@ -177,35 +167,35 @@ class _ScanDevicesState extends State<ScanDevices> {
           height: 500,
           child: _wifiList.isEmpty
               ? const Center(
-                  child: Text("Tidak ada perangkat ditemukan"),
-                )
+            child: Text("Tidak ada perangkat ditemukan"),
+          )
               : ListView.separated(
-                  itemCount: _wifiList.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final wifi = _wifiList[index];
-                    final status = _connectionStatus[wifi.ssid] ?? "";
-                    return Card(
-                      elevation: 1,
-                      color: Colors.white,
-                      child: ListTile(
-                        title: Text(wifi.ssid ?? "SSID Tidak Diketahui"),
-                        subtitle: Text(
-                          status,
-                          style: TextStyle(color: _getStatusColor(status)),
-                        ),
-                        onTap: () {
-                          if (_connectedSSID == wifi.ssid) {
-                            disconnectDevices(wifi.ssid ?? "");
-                          } else {
-                            connectToDevices(wifi.ssid ?? "");
-                          }
-                        },
-                      ),
-                    );
+            itemCount: _wifiList.length,
+            separatorBuilder: (context, index) =>
+            const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              final wifi = _wifiList[index];
+              final status = _connectionStatus[wifi.ssid] ?? "";
+              return Card(
+                elevation: 1,
+                color: Colors.white,
+                child: ListTile(
+                  title: Text(wifi.ssid ?? "SSID Tidak Diketahui"),
+                  subtitle: Text(
+                    status,
+                    style: TextStyle(color: _getStatusColor(status)),
+                  ),
+                  onTap: () {
+                    if (_connectedSSID == wifi.ssid) {
+                      disconnectDevices(wifi.ssid ?? "");
+                    } else {
+                      connectToDevices(wifi.ssid ?? "");
+                    }
                   },
                 ),
+              );
+            },
+          ),
         ),
       ],
     );
