@@ -30,6 +30,8 @@ class LayoutNoMains extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children:
                         body.isNotEmpty ? body : [const SizedBox.shrink()],
                   ),

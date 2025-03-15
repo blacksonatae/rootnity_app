@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         (MediaQuery.of(context).size.width / 2 - itemWidth / 2);
     _scrollController.animateTo(
       offset.clamp(0, _scrollController.position.maxScrollExtent),
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 100),
       curve: Curves.easeInOut,
     );
   }
