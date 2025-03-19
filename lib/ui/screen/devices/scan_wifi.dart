@@ -15,6 +15,7 @@ class ScanWifi extends StatefulWidget {
 class _ScanWifiState extends State<ScanWifi> {
   List<Map<String, dynamic>> _wifiList = [];
   bool _isConnectedToESP32 = false;
+  String _statusMessage = "";
 
   @override
   void initState() {
@@ -68,6 +69,93 @@ class _ScanWifiState extends State<ScanWifi> {
   }
 
 
+  Future<void> _sendWiFiCredentials(String ssid, String password) async {
+    final info = NetworkInfo();
+    String? uuidname = await info.getWifiName();
+    String? gatewayIP = await info.getWifiGatewayIP(); // Coba ambil gateway
+    String? subnetMask = await info.getWifiSubmask(); // Coba ambil subnet mask
+    print(gatewayIP);
+    print(subnetMask);
+
+    if (gatewayIP == null) {
+      print("❌ Gagal menemukan ESP32! Gateway tidak ditemukan.");
+      return;
+    }
+
+    RawDatagramSocket.bind(InternetAddress.anyIPv4, 4211).then((socket) {
+      Map<String, String> data = {"ssid": ssid, "password": password};
+      String jsonData = jsonEncode(data);
+      List<int> bytes = utf8.encode(jsonData);
+
+      socket.send(bytes, InternetAddress(gatewayIP), 4211);
+      print("📤 Mengirim SSID & Password ke $gatewayIP via UDP: $jsonData");
+
+      socket.listen((RawSocketEvent event) {
+        Datagram? datagram = socket.receive();
+        if (datagram != null) {
+          String message = utf8.decode(datagram.data);
+          print("📩 Respons dari ESP32: $message");
+        }
+      });
+
+      Future.delayed(Duration(seconds: 5), () {
+        socket.close();
+      });
+    });
+  }
+
+
+
+  void _showPasswordModal(BuildContext context, String ssid) {
+    TextEditingController passwordController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 16,
+              right: 16,
+              top: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Masukkan Password untuk $ssid",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: "Password WiFi",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  String password = passwordController.text.trim();
+                  if (password.isNotEmpty) {
+                    Navigator.pop(context);
+                    _sendWiFiCredentials(ssid, password);
+                  }
+                },
+                child: Text("Hubungkan"),
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +204,12 @@ class _ScanWifiState extends State<ScanWifi> {
           style: TextStyle(fontSize: 14.5, color: ThemeApp.seasalt),
           textAlign: TextAlign.justify,
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 20),
+        Text(
+          _statusMessage,
+          style: TextStyle(fontSize: 14, color: Colors.green),
+        ),
+        SizedBox(height: 20),
         SizedBox(
           height: 500,
           child: _wifiList.isEmpty
@@ -138,7 +231,11 @@ class _ScanWifiState extends State<ScanWifi> {
                     wifi["secured"] ? "Memerlukan password" : "Terbuka",
                   ),
                   onTap: () {
-                    
+                    if (wifi["secured"]) {
+                      _showPasswordModal(context, wifi["ssid"]);
+                    } else {
+                      _sendWiFiCredentials(wifi["ssid"], "");
+                    }
                   },
                 ),
               );

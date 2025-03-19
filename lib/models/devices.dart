@@ -1,13 +1,17 @@
+import 'package:rootnity_app/models/wifi.dart';
+
 class Devices {
   String? id;
   final String name;
   final String sectorsId;
+  WiFi? wiFi;
 
   //.. Buatkan constructors pada devices untuk menyimpan data
   Devices({
     this.id,
     required this.name,
     required this.sectorsId,
+    this.wiFi,
   });
 
   //.. Convert Json ke Object
