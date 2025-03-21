@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme_app.dart';
+import 'package:rootnity_app/service/controller/auth_services.dart';
+import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomHeaderWidget extends StatefulWidget {
-  const CustomHeaderWidget({super.key});
+  final VoidCallback onRefreshHeaderWidget;
+
+  const CustomHeaderWidget({super.key, required this.onRefreshHeaderWidget});
 
   @override
   State<CustomHeaderWidget> createState() => _CustomHeaderWidget();
@@ -29,6 +33,18 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
           ? "${username.substring(0, 12)}..."
           : username;
     });
+
+    widget.onRefreshHeaderWidget();
+  }
+
+  void _logout() async {
+    await AuthServices.logout();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -52,7 +68,10 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
               //.. PopupMenu sebagai dropdown untuk menampilkan menu logout
               CustomPopupmenu(
                 menuItems: [
-                  PopupMenuItem(child: Text("Logout")),
+                  PopupMenuItem(
+                    child: Text("Logout"),
+                    onTap: () => _logout(),
+                  ),
                 ],
                 offset: Offset(-60, 30),
                 child: Icon(

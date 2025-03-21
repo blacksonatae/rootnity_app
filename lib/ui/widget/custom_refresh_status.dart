@@ -13,22 +13,23 @@ class CustomRefreshStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 55,
+      height: 200,
       child: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 5),
               //.. Icons dalam bentuk animasi
               SizedBox(
-                height: 35,
+                height: 30,
                 child: Image.asset(
                   dirAnimation,
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 5),
               //.. Text
               Text(
                 textRefreshStatus,
