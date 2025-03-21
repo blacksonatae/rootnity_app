@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/ui/screen/auth/login.dart';
-import 'package:rootnity_app/ui/screen/layout/layout.dart';
+import 'package:rootnity_app/ui/layout/base_layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn ? const LayoutScreen() : const LoginScreen(),
+      home: BaseLayout(),
     );
   }
 }

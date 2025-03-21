@@ -19,17 +19,18 @@ class CustomPopupmenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (TapDownDetails) {
-        final RenderBox renderBox = context.findRenderObject() as RenderBox;
-        final Offset position = renderBox.localToGlobal(Offset.zero);
+      behavior: HitTestBehavior.translucent,
+      onTapDown: (details) {
+        /*final RenderBox renderBox = context.findRenderObject() as RenderBox;
+        final Offset position = renderBox.localToGlobal(Offset.zero);*/
 
         showMenu(
           context: context,
           position: RelativeRect.fromLTRB(
-            position.dx + offset.dx,
-            position.dy + offset.dy,
-            position.dx + offset.dx + 1,
-            position.dy + offset.dy + 1,
+            details.globalPosition.dx + offset.dx,
+            details.globalPosition.dy + offset.dy,
+            details.globalPosition.dx + offset.dx + 1,
+            details.globalPosition.dy + offset.dy + 1,
           ),
           items: menuItems,
           color: Colors.white,
