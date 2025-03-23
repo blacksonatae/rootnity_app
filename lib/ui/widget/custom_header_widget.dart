@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme_app.dart';
-import 'package:rootnity_app/service/controller/auth_services.dart';
-import 'package:rootnity_app/ui/screen/auth/login.dart';
 import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomHeaderWidget extends StatefulWidget {
-  final VoidCallback onRefreshHeaderWidget;
 
-  const CustomHeaderWidget({super.key, required this.onRefreshHeaderWidget});
+  const CustomHeaderWidget({super.key});
 
   @override
   State<CustomHeaderWidget> createState() => _CustomHeaderWidget();
 }
 
 class _CustomHeaderWidget extends State<CustomHeaderWidget> {
-  String? _username; //.. Variabel user name atau pengguna
+  String? _username = "User"; //.. Variabel user name atau pengguna
 
   @override
   void initState() {
-    _loadUserName(); //..
     // TODO: implement initState
     super.initState();
+    _loadUserName(); //.. Panggil loadUserName untuk memanggil nama pengguna
   }
 
+  //.. Fungsi untuk mengambil nama pengguna dari SharedPreferences
   void _loadUserName() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? username = preferences.getString('name');
@@ -33,18 +31,16 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
           ? "${username.substring(0, 12)}..."
           : username;
     });
-
-    widget.onRefreshHeaderWidget();
   }
 
   void _logout() async {
-    await AuthServices.logout();
-    Navigator.push(
+    /*await AuthServices.logout();
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginScreen(),
+        builder: (context) => const LoginScreen(),
       ),
-    );
+    );*/
   }
 
   @override
