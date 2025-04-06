@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/ui/layouts/base_layouts.dart';
-import 'package:rootnity_app/ui/screens/home.dart';
-import 'package:rootnity_app/ui/screens/profile.dart';
-import 'package:rootnity_app/ui/widgets/custom_footer_widget.dart';
-
-//.. Main Screen bertanggung jawab penuh untuk navigasi dan menyusun konten halaman utama
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,30 +8,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; //.. Variabel untuk menyimpan indeks yang dipilih
+  int _selectedIndex = 0;
 
-  //.. Fungsi untuk menyimpan halaman yang dipilih berdasarkan index
-  final List<Widget> _pages = const [
-    HomeScreen(),
-    ProfileScreen(),
+  //.. List halaman (Home dan Profile)
+  final List<Widget> _listPages = const[
+
   ];
+
+  //.. Fungsi untuk mengubah tab halaman saat tombol di BottomNavigationBar ditekan
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
-      //.. Menampilkan halaman yang dipilih berdasarkan indeks, gunakan IndexedStack agar state daru tiap halaman tidak akan reset saat berpindah
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
-      footer: CustomFooterWidget(
-        selectedIndex: _selectedIndex,
-        onItemTapped: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-      ),
+    return Scaffold(
+
     );
   }
 }
