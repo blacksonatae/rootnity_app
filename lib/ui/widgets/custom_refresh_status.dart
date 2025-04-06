@@ -4,11 +4,8 @@ class CustomRefreshStatus extends StatelessWidget {
   final String dirAnimation;
   final String textRefreshStatus;
 
-  const CustomRefreshStatus({
-    super.key,
-    required this.textRefreshStatus,
-    required this.dirAnimation,
-  });
+  const CustomRefreshStatus(
+      {super.key, required this.dirAnimation, required this.textRefreshStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +26,14 @@ class CustomRefreshStatus extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 5),
+              SizedBox(height: 5),
               //.. Text
               Text(
                 textRefreshStatus,
-                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),

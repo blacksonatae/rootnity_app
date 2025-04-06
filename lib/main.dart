@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/ui/layout/base_layout.dart';
-import 'package:rootnity_app/ui/screen/home.dart';
+import 'package:rootnity_app/ui/screens/auth/login.dart';
+import 'package:rootnity_app/ui/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //.. Panggil fungsi
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  //.. Mengambil token dari preferences yang diambil dari local yang sudah didapatkan dari token laravel
-  String? token = preferences.getString('token');
+  //.. Memanggil Fungsi SharedPreferences untuk local storages
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //.. Mengambil token dari preferences yang sudah diambil dari local storages
+  String? token = prefs.getString('token');
 
   //.. Fungsi untuk menjalankan program
   runApp(MyApp(isLoggedIn: token != null));
@@ -16,7 +16,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool
-      isLoggedIn; //.. Sebagai status login untuk menentukan apakah pengguna sudah login atau belum
+      isLoggedIn; //.. Sebagai status login untuk menentukan pengguna sudah login atau belum
 
   const MyApp({super.key, required this.isLoggedIn});
 
@@ -24,14 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn
-          ? const SafeArea(
-              child: Scaffold(
-                backgroundColor: Colors.white,
-                body: BaseLayout(),
-              ),
-            )
-          : const Home(),
+      home: isLoggedIn ? const MainScreen(): const LoginScreen(),
     );
   }
 }

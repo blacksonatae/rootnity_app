@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/core/theme_app.dart';
-import 'package:rootnity_app/ui/widget/custom_popupmenu.dart';
+import 'package:rootnity_app/core/theme/theme_app.dart';
+import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomHeaderWidget extends StatefulWidget {
-
   const CustomHeaderWidget({super.key});
 
   @override
-  State<CustomHeaderWidget> createState() => _CustomHeaderWidget();
+  State<CustomHeaderWidget> createState() => _CustomHeaderWidgetState();
 }
 
-class _CustomHeaderWidget extends State<CustomHeaderWidget> {
+class _CustomHeaderWidgetState extends State<CustomHeaderWidget> {
   String? _username = "User"; //.. Variabel user name atau pengguna
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadUserName(); //.. Panggil loadUserName untuk memanggil nama pengguna
+    _loadUserName(); //.. Panggil loadUserName untuk memanggil nama pengguna dari local storages
   }
 
   //.. Fungsi untuk mengambil nama pengguna dari SharedPreferences
@@ -33,15 +32,7 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
     });
   }
 
-  void _logout() async {
-    /*await AuthServices.logout();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
-      ),
-    );*/
-  }
+  void _logout() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +43,7 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
         children: [
           Row(
             children: [
-              //.. Untuk menampilkan username atau nama pengguna
+              //.. Tampilan username (nama pengguna)
               Text(
                 _username ?? "User",
                 style: TextStyle(
@@ -62,33 +53,32 @@ class _CustomHeaderWidget extends State<CustomHeaderWidget> {
                 ),
               ),
               //.. PopupMenu sebagai dropdown untuk menampilkan menu logout
-              CustomPopupmenu(
+              CustomPopupMenu(
                 menuItems: [
                   PopupMenuItem(
                     child: Text("Logout"),
-                    onTap: () => _logout(),
+                    onTap: () {},
                   ),
                 ],
                 offset: Offset(-60, 30),
-                child: Icon(
-                  Icons.arrow_drop_down_rounded,
-                  color: ThemeApp.eerieBlack,
-                ),
+                child: Icon(Icons.arrow_drop_down_rounded),
               ),
             ],
           ),
-          CustomPopupmenu(
+
+          //.. PopupMenu akan menampilkan beberapa menu dalam bentuk list yang berisi add sektor dan add devices
+          CustomPopupMenu(
             menuItems: [
               //.. Tombol tambah sektor
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
                 onTap: () => (),
               ),
+              //.. Tombol tambah perangkat
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),
                 onTap: () => (),
               ),
-              //.. Tombol tambah perangkat
             ],
             offset: Offset(-150, 30),
             child: Icon(

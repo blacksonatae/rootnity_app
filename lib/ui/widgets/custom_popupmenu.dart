@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 * Gunakan class popupmenu untuk mengurangi pengguna memori, dengan membuat object dari class popup menu
 * */
 
-class CustomPopupmenu extends StatelessWidget {
+class CustomPopupMenu extends StatelessWidget {
   final List<PopupMenuEntry> menuItems;
   final Widget child;
   final Offset offset;
 
-  const CustomPopupmenu({
-    super.key,
-    required this.menuItems,
-    required this.child,
-    this.offset = const Offset(40, 0),
-  });
+  const CustomPopupMenu(
+      {super.key,
+      required this.menuItems,
+      required this.child,
+      this.offset = const Offset(40, 0)});
 
   @override
   Widget build(BuildContext context) {

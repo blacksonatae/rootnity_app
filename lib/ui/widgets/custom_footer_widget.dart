@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:rootnity_app/core/theme_app.dart';
+import 'package:rootnity_app/core/theme/theme_app.dart';
 
-class CustomFooterWidget extends StatefulWidget {
+class CustomFooterWidget extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
 
-  const CustomFooterWidget({
-    super.key,
-    required this.selectedIndex,
-    required this.onItemTapped,
-  });
+  const CustomFooterWidget(
+      {super.key, required this.selectedIndex, required this.onItemTapped});
 
-  @override
-  State<CustomFooterWidget> createState() => _CustomFooterWidgetState();
-}
-
-class _CustomFooterWidgetState extends State<CustomFooterWidget> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: widget.selectedIndex,
-      onTap: widget.onItemTapped,
+      currentIndex: selectedIndex,
+      onTap: onItemTapped,
       backgroundColor: Colors.white,
       selectedItemColor: ThemeApp.kellyGreen,
       unselectedItemColor: ThemeApp.seasalt,
