@@ -36,8 +36,8 @@ class CustomRefreshStatus extends StatelessWidget {
           break;
       }
 
-      return SizedBox(
-        height: 200,
+      return Padding(
+        padding: const EdgeInsets.only(top: 35),
         child: Center(
           child: SingleChildScrollView(
             child: Column(

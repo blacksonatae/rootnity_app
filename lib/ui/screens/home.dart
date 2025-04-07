@@ -14,30 +14,19 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshController(initialRefresh: false);
 
   //.. Fungsi untuk merefresh halaman
-  void _onRefresh() async {}
+  void _onRefresh() async {
+    _refreshController.refreshCompleted();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-      content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //.. List sektor dan pengaturan sektor (kelola)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Center(
-                  child: Text("Home Screen"),
-                ),
-              ],
-            )
-          ],
-        ),
+      content: const Center(
+        child: Text("Home Screen"),
       ),
       refreshController: _refreshController,
       onRefresh: _onRefresh,
-      selectedIndex: 0,
     );
   }
 }

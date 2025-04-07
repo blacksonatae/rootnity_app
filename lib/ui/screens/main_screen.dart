@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/ui/layouts/safe_child.dart';
 import 'package:rootnity_app/ui/screens/home.dart';
 import 'package:rootnity_app/ui/screens/profile.dart';
 import 'package:rootnity_app/ui/widgets/custom_footer_widget.dart';
@@ -13,12 +14,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  //.. List halaman (Home dan Profile)
-  final List<Widget> _listPages = const [
-    HomeScreen(), //.. Home Screen
-    ProfileScreen(), //.. Profile Screen
-  ];
-
   //.. Fungsi untuk mengubah tab halaman saat tombol di BottomNavigationBar ditekan
   void _onItemTapped(int index) {
     setState(() {
@@ -30,9 +25,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //.. Gunakan IndexedStack agar state tiap halaman terjaga (tidak refreshing atau fetch data otomatis)
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _listPages,
+      body: SafeChild(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: const [
+            HomeScreen(),
+            ProfileScreen(),
+          ],
+        ),
       ),
       bottomNavigationBar: CustomFooterWidget(
         selectedIndex: _selectedIndex,

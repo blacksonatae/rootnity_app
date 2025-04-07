@@ -14,34 +14,32 @@ class BaseLayout extends StatelessWidget {
   final RefreshController
       refreshController; //.. Controller refresh untuk merefresh halaman
   final VoidCallback onRefresh;
-  final int selectedIndex;
 
   const BaseLayout({
     super.key,
     required this.content,
     required this.refreshController,
     required this.onRefresh,
-    required this.selectedIndex,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SmartRefresher(
-          controller: refreshController,
-          enablePullDown: true,
-          header: CustomRefreshStatus(),
-          onRefresh: onRefresh,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const CustomHeaderWidget(), //.. Header
-                content, //.. Content atau halaman seperti home dan profile yang memiliki elemen-elemen penting
-              ],
+    return SmartRefresher(
+      controller: refreshController,
+      enablePullDown: true,
+      header: CustomRefreshStatus(),
+      onRefresh: onRefresh,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const CustomHeaderWidget(),
+            //.. Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: content,
             ),
-          ),
+            //.. Content atau halaman seperti home dan profile yang memiliki elemen-elemen penting
+          ],
         ),
       ),
     );

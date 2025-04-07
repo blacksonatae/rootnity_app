@@ -14,23 +14,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       RefreshController(initialRefresh: false);
 
   //.. Fungsi untuk merefresh halaman
-  void _onRefresh() async {}
+  void _onRefresh() async {
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-        content: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Center(
-                child: Text("Profile Screen"),
-              )
-            ],
-          ),
-        ),
-        refreshController: _refreshController,
-        onRefresh: _onRefresh,
-        selectedIndex: 1);
+      content: const Center(
+        child: Text("Profile Screen"),
+      ),
+      refreshController: _refreshController,
+      onRefresh: _onRefresh,
+    );
   }
 }
