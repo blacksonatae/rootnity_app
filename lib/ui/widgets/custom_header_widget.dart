@@ -23,12 +23,11 @@ class _CustomHeaderWidgetState extends State<CustomHeaderWidget> {
   //.. Fungsi untuk mengambil nama pengguna dari SharedPreferences
   void _loadUserName() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? username = preferences.getString('name');
+    String? username = preferences.getString('name') ?? "User";
 
     setState(() {
-      _username = (username != null && username.length > 12)
-          ? "${username.substring(0, 12)}..."
-          : username;
+      _username =
+          (username.length > 12) ? "${username.substring(0, 12)}..." : username;
     });
   }
 

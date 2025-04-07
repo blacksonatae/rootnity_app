@@ -1,0 +1,2 @@
+C:/Users/B602-01/Downloads/Kazuya/rootnity_app/android/app/.cxx/Debug/2d406s3x/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/B602-01/Downloads/Kazuya/rootnity_app/android/app/.cxx/Debug/2d406s3x/armeabi-v7a/CMakeFiles/rebuild_cache.dir
