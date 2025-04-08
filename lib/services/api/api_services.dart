@@ -15,19 +15,19 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString('token');
     _dio.options.headers['Authorization'] =
-    token != null ? 'Bearer $token' : null;
+        token != null ? 'Bearer $token' : null;
 
     return await _dio.get(endPoint);
   }
 
   //.. Method POST untuk mengirim data ke server
-  static Future<Response?> postData(
+  static void Future<Response?> postData(
       String endpoint, Map<String, dynamic> data, context) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString('token');
       _dio.options.headers['Authorization'] =
-      token != null ? 'Bearer $token' : null;
+          token != null ? 'Bearer $token' : null;
 
       Response response = await _dio.post(endpoint, data: data);
       return response;
@@ -39,5 +39,4 @@ class ApiServices {
       return null;
     }
   }
-
 }
