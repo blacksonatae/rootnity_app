@@ -21,7 +21,7 @@ class ApiServices {
   }
 
   //.. Method POST untuk mengirim data ke server
-  static void Future<Response?> postData(
+  static Future<Response?> postData(
       String endpoint, Map<String, dynamic> data, context) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
