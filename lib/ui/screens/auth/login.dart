@@ -21,8 +21,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Map<String, dynamic>? errors; //.. Variabel mengampung error
 
   //.. Fungsi untuk register
-  void _register() async {
+  void _login() async {
     var result = await AuthServices.login(email.text, password.text, context);
+
+    print(result);
 
     if (result['status'] == false) {
       setState(() {
@@ -60,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 20),
         //.. Button Login
         CustomElevatedButton(
-          nameButton: "Register",
-          onPressed: () => _register(),
+          nameButton: "Login",
+          onPressed: () => _login(),
         ),
         const SizedBox(height: 20),
         //.. Button untuk mengarah halaman register

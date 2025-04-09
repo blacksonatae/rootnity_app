@@ -9,6 +9,9 @@ class SectorsServices {
   static final StreamController<List<Sectors>> _sectorStreamController =
       StreamController<List<Sectors>>.broadcast();
 
+  //.. Getter untuk stream
+  static Stream<List<Sectors>> get sectorStream => _sectorStreamController.stream;
+
   //.. Ambil data sektor dari local jika ada
   static Future<List<Sectors>> getStoreSectors() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

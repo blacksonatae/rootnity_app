@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
+import 'package:rootnity_app/ui/screens/devices/create/scan_devices.dart';
+import 'package:rootnity_app/ui/screens/sectors/create_sectors.dart';
 import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,12 +73,13 @@ class _CustomHeaderWidgetState extends State<CustomHeaderWidget> {
               //.. Tombol tambah sektor
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
-                onTap: () => (),
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateSectors())),
               ),
               //.. Tombol tambah perangkat
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),
-                onTap: () => (),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ScanDevices())),
               ),
             ],
             offset: Offset(-150, 30),

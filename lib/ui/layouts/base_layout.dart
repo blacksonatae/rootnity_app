@@ -29,18 +29,17 @@ class BaseLayout extends StatelessWidget {
       enablePullDown: true,
       header: CustomRefreshStatus(),
       onRefresh: onRefresh,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const CustomHeaderWidget(),
-            //.. Header
-            Padding(
+      child: Column(
+        children: [
+          const CustomHeaderWidget(),
+          //.. Header
+          Expanded(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: content,
             ),
-            //.. Content atau halaman seperti home dan profile yang memiliki elemen-elemen penting
-          ],
-        ),
+          ),
+          //.. Content atau halaman seperti home dan profile yang memiliki elemen-elemen penting
+        ],
       ),
     );
   }

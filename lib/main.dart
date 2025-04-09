@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/ui/layouts/custom_page_layout.dart';
 import 'package:rootnity_app/ui/screens/auth/login.dart';
+import 'package:rootnity_app/ui/screens/devices/create/scan_devices.dart';
 import 'package:rootnity_app/ui/screens/main_screen.dart';
+import 'package:rootnity_app/ui/screens/sectors/create_sectors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       home: isLoggedIn ? MainScreen() : LoginScreen(),
+      // home: MainScreen(),
     );
   }
 }

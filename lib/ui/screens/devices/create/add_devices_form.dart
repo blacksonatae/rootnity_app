@@ -1,35 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
-import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/custom_page_layout.dart';
-import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
 
-class CreateSectors extends StatefulWidget {
-  const CreateSectors({super.key});
+class AddDevicesForm extends StatefulWidget {
+  const AddDevicesForm({super.key});
 
   @override
-  State<CreateSectors> createState() => _CreateSectorsState();
+  State<AddDevicesForm> createState() => _AddDevicesFormState();
 }
 
-class _CreateSectorsState extends State<CreateSectors> {
-  final TextEditingController nameSectors = TextEditingController();
-
-  Map<String, dynamic>? errors;
-
-  void _createSectors() async {
-    var result = await SectorsServices.createSectors(nameSectors.text, context);
-
-    if (result['status'] == false) {
-      setState(() {
-        errors = result['errors'] ?? {};
-      });
-    }
-
-    if (result['status'] == true) {
-      Navigator.pop(context);
-    }
-  }
-
+class _AddDevicesFormState extends State<AddDevicesForm> {
   @override
   Widget build(BuildContext context) {
     return CustomPageLayout(
@@ -42,7 +22,7 @@ class _CreateSectorsState extends State<CreateSectors> {
           ),
         ),
         Text(
-          "Tambahkan Sektor",
+          "Final Tambahkan Perangkat",
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
@@ -51,7 +31,7 @@ class _CreateSectorsState extends State<CreateSectors> {
         ),
         GestureDetector(
           //.. Mengarah ke halaman konfigurasi wifi
-          onTap: () => _createSectors(),
+          onTap: () {},
           child: Icon(
             Icons.check,
             color: ThemeApp.brandeisBlue,
@@ -61,7 +41,7 @@ class _CreateSectorsState extends State<CreateSectors> {
       body: [
         //.. Heading
         Text(
-          "Tambahkan Sektor Baru",
+          "Final Perangkat Baru",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -71,17 +51,11 @@ class _CreateSectorsState extends State<CreateSectors> {
         SizedBox(height: 7.5),
         //.. Text Keterangan
         Text(
-          "Masukan nama sektor untuk menambah sektor baru !",
+          "Tambahkan perangkat baru dengan memasukkan nama perangkat dan sektor yang dipilih.",
           style: TextStyle(fontSize: 14.5, color: ThemeApp.seasalt),
           textAlign: TextAlign.justify,
         ),
         SizedBox(height: 30),
-        //.. Text Field
-        CustomTextField(
-          controller: nameSectors,
-          label: "Masukkan Sektor",
-          errorText: errors?['name_sectors']?.first,
-        ),
       ],
     );
   }

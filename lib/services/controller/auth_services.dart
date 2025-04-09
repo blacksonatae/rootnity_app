@@ -6,13 +6,16 @@ class AuthServices {
   static Future<Map<String, dynamic>> login(
       String email, String password, context) async {
     var response = await ApiServices.postData(
-      '/register',
+      '/login',
       {
         'email': email,
         'password': password,
       },
       context,
     );
+
+    print(response);
+
     if (response != null && response.statusCode == 201) {
       var data = response.data['data'];
       //.. Informasi name, email, dan token akan masuk kedalam method AccountPreferences
@@ -31,7 +34,8 @@ class AuthServices {
   }
 
   //.. Method Register
-  static Future<Map<String, dynamic>> register(String name, String email, String password, String confirmPassword, context) async {
+  static Future<Map<String, dynamic>> register(String name, String email,
+      String password, String confirmPassword, context) async {
     var response = await ApiServices.postData(
       '/register',
       {
