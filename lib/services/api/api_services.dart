@@ -4,10 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiServices {
   //.. URL API Laravel
   static final _dio = Dio(
-    BaseOptions(baseUrl: "https://9a1f-103-47-133-191.ngrok-free.app/api", headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }),
+    BaseOptions(
+        baseUrl: "https://8715-116-90-214-76.ngrok-free.app/api",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
   );
 
   //.. Method GET untuk mengambil data dari server
@@ -27,7 +29,7 @@ class ApiServices {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString('token');
       _dio.options.headers['Authorization'] =
-      token != null ? 'Bearer $token' : null;
+          token != null ? 'Bearer $token' : null;
 
       Response response = await _dio.post(endpoint, data: data);
       return response;

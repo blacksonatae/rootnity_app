@@ -5,6 +5,7 @@ import 'package:rootnity_app/core/model/sectors.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
 import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/base_layout.dart';
+import 'package:rootnity_app/ui/screens/sectors/manager_sectors.dart';
 import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,13 +17,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
   final PageController _pageController = PageController();
   final ScrollController _scrollController = ScrollController();
 
   int _sectorCurrentIndex = 0; //.. Indeks pada sektor
   Future<List<Sectors>>?
-      _sectorsFuture; //.. Variabel list sektor untuk mengampung daftar sektor
+  _sectorsFuture; //.. Variabel list sektor untuk mengampung daftar sektor
 
   @override
   void initState() {
@@ -30,8 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     //.. Fetch pertama kali
     SectorsServices.fetchSectors(context);
-    //.. Untuk FutureBuilder list perangkat
-    _sectorsFuture = SectorsServices.getStoreSectors();
   }
 
   //.. Membuat fungsi untuk mengurangi nama sektor yang berlebih.
@@ -67,7 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _scrollToCurrentSector(int index) {
     double itemWidth = 120;
     double offset = (index * itemWidth) -
-        (MediaQuery.of(context).size.width / 2 - itemWidth / 2);
+        (MediaQuery
+            .of(context)
+            .size
+            .width / 2 - itemWidth / 2);
 
     _scrollController.animateTo(
       offset.clamp(0, _scrollController.position.maxScrollExtent),
@@ -122,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         separatorBuilder: (context, index) =>
-                            const SizedBox(width: 25),
+                        const SizedBox(width: 25),
                       ),
                     ),
                   ),
@@ -144,15 +146,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: List.generate(
                                     sectors.length,
-                                    (index) => PopupMenuItem(
-                                      child: Text(
-                                        showNameSectors(sectors[index].name),
-                                      ),
-                                      onTap: () {
-                                        _onSectorTapped(index);
-                                        print("${sectors[index]} dipilih");
-                                      },
-                                    ),
+                                        (index) =>
+                                        PopupMenuItem(
+                                          child: Text(
+                                            showNameSectors(
+                                                sectors[index].name),
+                                          ),
+                                          onTap: () {
+                                            _onSectorTapped(index);
+                                            print("${sectors[index]
+                                                .name} dipilih");
+                                          },
+                                        ),
                                   ),
                                 ),
                               ),
@@ -163,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             PopupMenuItem(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Kelola Sektor",
@@ -178,8 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               onTap: () {
-                                print("Kelola Sektor ditekan");
-                                /*Navigator.push(context, MaterialPageRoute(builder: (context) => SectorsManager()));*/
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => ManagerSectors()));
                               },
                             ),
                           ],
@@ -199,52 +204,57 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
           //.. List Devices (Perangkat)
           Expanded(
-            child: FutureBuilder(
-              future: _sectorsFuture,
+            child: StreamBuilder<List<Sectors>>(
+              stream: SectorsServices.sectorStream,
               builder: (context, snapshot) {
-                if (snapshot.hasError || !snapshot.hasData) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
-                    child: Text("Tidak ada sektor tersedia."),
-                  );
+                      child: Text("Tidak ada sektor tersedia."));
                 }
+
+                // Perbarui daftar sektor secara real-time
                 final sectors = snapshot.data!;
-                return PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    _onPageChanged(index);
-                  },
-                  itemCount: sectors.length,
-                  itemBuilder: (context, index) {
-                    return SingleChildScrollView(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        color: Colors.white,
-                        child: Container(
-                          padding: EdgeInsets.all(18.0),
-                          width: double.infinity,
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'images/plant_design.png',
-                                fit: BoxFit.cover,
-                                width: 200,
-                                height: 100,
+
+                return StatefulBuilder(
+                  builder: (context, setStatePageView) {
+                    return PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (index) => _onPageChanged(index),
+                      itemCount: sectors.length,
+                      itemBuilder: (context, index) {
+                        return SingleChildScrollView(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Colors.white,
+                            child: Container(
+                              padding: const EdgeInsets.all(18.0),
+                              width: double.infinity,
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'images/plant_design.png',
+                                    fit: BoxFit.cover,
+                                    width: 200,
+                                    height: 100,
+                                  ),
+                                  SizedBox(height: 18),
+                                  Text(
+                                    "Tidak Ada Perangkat",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: ThemeApp.seasalt,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 18),
-                              Text(
-                                "Tidak Ada Perangkat",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: ThemeApp.seasalt,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                 );

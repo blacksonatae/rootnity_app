@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
 import 'package:rootnity_app/ui/layouts/custom_page_layout.dart';
+import 'package:rootnity_app/ui/widgets/custom_dropdown_field.dart';
+import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
 
 class AddDevicesForm extends StatefulWidget {
   const AddDevicesForm({super.key});
@@ -10,6 +12,13 @@ class AddDevicesForm extends StatefulWidget {
 }
 
 class _AddDevicesFormState extends State<AddDevicesForm> {
+  final TextEditingController _nameDevices = TextEditingController();
+
+  String? _selectedOption;
+  final _options = ['Pilih Sektor', 'Pendidikan', 'Kesehatan'];
+
+  Map<String, dynamic>? errors;
+
   @override
   Widget build(BuildContext context) {
     return CustomPageLayout(
@@ -56,6 +65,30 @@ class _AddDevicesFormState extends State<AddDevicesForm> {
           textAlign: TextAlign.justify,
         ),
         SizedBox(height: 30),
+        CustomTextField(
+          controller: _nameDevices,
+          label: "Nama Perangkat",
+          errorText: errors?['name_devices']?.first,
+        ),
+        SizedBox(height: 15),
+        //.. Select form
+        CustomDropdownField<String>(
+          items: _options.map((option) {
+            return DropdownMenuItem(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          value: _selectedOption, // harus null jika belum dipilih
+          hint: Text("Pilih Sektor"), // tampil hanya jika belum dipilih
+          onChanged: (val) {
+            setState(() {
+              _selectedOption = val;
+            });
+          },
+          errorText: _selectedOption == null ? 'Wajib diisi' : null,
+        )
+
       ],
     );
   }
