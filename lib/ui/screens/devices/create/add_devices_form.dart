@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/core/model/sectors.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
+import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/custom_page_layout.dart';
-import 'package:rootnity_app/ui/widgets/custom_dropdown_field.dart';
+import 'package:rootnity_app/ui/widgets/custom_dropdown_select.dart';
 import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
 
 class AddDevicesForm extends StatefulWidget {
@@ -13,11 +15,18 @@ class AddDevicesForm extends StatefulWidget {
 
 class _AddDevicesFormState extends State<AddDevicesForm> {
   final TextEditingController _nameDevices = TextEditingController();
+  List<Map<String, dynamic>> sectors = [];
 
-  String? _selectedOption;
-  final _options = ['Pilih Sektor', 'Pendidikan', 'Kesehatan'];
+  Sectors? selectedSectors;
 
   Map<String, dynamic>? errors;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SectorsServices.fetchSectors(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,25 +79,30 @@ class _AddDevicesFormState extends State<AddDevicesForm> {
           label: "Nama Perangkat",
           errorText: errors?['name_devices']?.first,
         ),
-        SizedBox(height: 15),
-        //.. Select form
-        CustomDropdownField<String>(
-          items: _options.map((option) {
-            return DropdownMenuItem(
-              value: option,
-              child: Text(option),
-            );
-          }).toList(),
-          value: _selectedOption, // harus null jika belum dipilih
-          hint: Text("Pilih Sektor"), // tampil hanya jika belum dipilih
-          onChanged: (val) {
-            setState(() {
-              _selectedOption = val;
-            });
-          },
-          errorText: _selectedOption == null ? 'Wajib diisi' : null,
-        )
+        SizedBox(height: 20),
+        //.. Select Dropdown Sector Form
+        StreamBuilder<List<Sectors>>(
+          stream: SectorsServices.sectorStream,
+          builder: (context, snapshot) {
+            final sectors = snapshot.data ?? [];
 
+            return CustomDropdownSelect(
+              labelText: "Sektor",
+              items: sectors.map((sector) {
+                return DropdownMenuItem(
+                  value: sector,
+                  child: Text(sector.name),
+                );
+              }).toList(),
+              selectedValue: selectedSectors,
+              errorText: errors?['sectors_id']?.first,
+              hintText: "Pilih Sektor",
+              onChanged: (sector) {
+                setState(() => selectedSectors = sector);
+              },
+            );
+          },
+        ),
       ],
     );
   }

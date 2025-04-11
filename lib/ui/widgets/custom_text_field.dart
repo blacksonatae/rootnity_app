@@ -71,7 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         focusColor: ThemeApp.seasalt,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: ThemeApp.seasalt, width: 2),
+          borderSide: BorderSide(color: ThemeApp.seasalt, width: 1.5),
         ),
       ),
     );
