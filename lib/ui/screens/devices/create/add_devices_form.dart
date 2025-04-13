@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/model/sectors.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
+import 'package:rootnity_app/services/controller/devices_services.dart';
 import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/custom_page_layout.dart';
 import 'package:rootnity_app/ui/widgets/custom_dropdown_select.dart';
 import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddDevicesForm extends StatefulWidget {
   const AddDevicesForm({super.key});
@@ -14,7 +16,7 @@ class AddDevicesForm extends StatefulWidget {
 }
 
 class _AddDevicesFormState extends State<AddDevicesForm> {
-  final TextEditingController _nameDevices = TextEditingController();
+  final TextEditingController nameDevices = TextEditingController();
   List<Map<String, dynamic>> sectors = [];
 
   Sectors? selectedSectors;
@@ -26,6 +28,18 @@ class _AddDevicesFormState extends State<AddDevicesForm> {
     // TODO: implement initState
     super.initState();
     SectorsServices.fetchSectors(context);
+  }
+
+
+  void _addDevices() async {
+    var result = await DevicesServices.createDevices(nameDevices.text, selectedSectors!.id, context);
+
+
+    if (result['status']) {
+      Navigator.pop(context);
+    } else {
+      setState(() => errors = result['errors']);
+    }
   }
 
   @override
@@ -49,7 +63,9 @@ class _AddDevicesFormState extends State<AddDevicesForm> {
         ),
         GestureDetector(
           //.. Mengarah ke halaman konfigurasi wifi
-          onTap: () {},
+          onTap: () {
+            _addDevices();
+          },
           child: Icon(
             Icons.check,
             color: ThemeApp.brandeisBlue,
@@ -75,9 +91,9 @@ class _AddDevicesFormState extends State<AddDevicesForm> {
         ),
         SizedBox(height: 30),
         CustomTextField(
-          controller: _nameDevices,
+          controller: nameDevices,
           label: "Nama Perangkat",
-          errorText: errors?['name_devices']?.first,
+          errorText: errors?['name_device']?.first,
         ),
         SizedBox(height: 20),
         //.. Select Dropdown Sector Form

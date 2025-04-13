@@ -5,7 +5,7 @@ class ApiServices {
   //.. URL API Laravel
   static final _dio = Dio(
     BaseOptions(
-        baseUrl: "https://92f2-116-90-214-49.ngrok-free.app/api",
+        baseUrl: "https://8b02-125-167-59-224.ngrok-free.app/api",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',

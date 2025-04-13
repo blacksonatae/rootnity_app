@@ -1,8 +1,10 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rootnity_app/core/model/devices.dart';
 import 'package:rootnity_app/core/model/sectors.dart';
 import 'package:rootnity_app/core/theme/theme_app.dart';
+import 'package:rootnity_app/services/controller/devices_services.dart';
 import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/base_layout.dart';
 import 'package:rootnity_app/ui/screens/sectors/manager_sectors.dart';
@@ -21,28 +23,27 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
   final ScrollController _scrollController = ScrollController();
 
-  int _sectorCurrentIndex = 0; //.. Indeks pada sektor
-  Future<List<Sectors>>?
-  _sectorsFuture; //.. Variabel list sektor untuk mengampung daftar sektor
+  int _sectorCurrentIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //.. Fetch pertama kali
+    // Fetch data pertama kali
     SectorsServices.fetchSectors(context);
+    DevicesServices.fetchDevices(context);
   }
 
-  //.. Membuat fungsi untuk mengurangi nama sektor yang berlebih.
+  // Fungsi untuk mengurangi panjang nama sektor
   String showNameSectors(String nameSectors) {
     return (nameSectors.length > 12)
         ? "${nameSectors.substring(0, 12)}..."
         : nameSectors;
   }
 
-  //.. Fungsi untuk merefresh halaman
+  // Fungsi refresh halaman
   void _onRefresh() async {
     await SectorsServices.fetchSectors(context);
+    await DevicesServices.fetchDevices(context);
     _refreshController.refreshCompleted();
   }
 
@@ -50,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _sectorCurrentIndex = index;
     });
-
     _scrollToCurrentSector(index);
   }
 
@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _sectorCurrentIndex = index;
     });
-
     _pageController.jumpToPage(index);
     _scrollToCurrentSector(index);
   }
@@ -66,16 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _scrollToCurrentSector(int index) {
     double itemWidth = 120;
     double offset = (index * itemWidth) -
-        (MediaQuery
-            .of(context)
-            .size
-            .width / 2 - itemWidth / 2);
-
-    _scrollController.animateTo(
-      offset.clamp(0, _scrollController.position.maxScrollExtent),
-      duration: Duration(microseconds: 300),
-      curve: Curves.easeInOut,
-    );
+        (MediaQuery.of(context).size.width / 2 - itemWidth / 2);
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        offset.clamp(0, _scrollController.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -84,13 +81,23 @@ class _HomeScreenState extends State<HomeScreen> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //.. List Sectors
+          // List Sektor
           StreamBuilder<List<Sectors>>(
             stream: SectorsServices.sectorStream,
             builder: (context, snapshot) {
               final sectors = snapshot.data ?? [];
+              print("Stream Sectors: ${sectors.map((s) => s.toJson()).toList()}");
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                );
+              }
               if (sectors.isEmpty) {
-                return const Text('Belum ada sektor');
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Belum ada sektor'),
+                );
               }
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _scrollController,
                         itemCount: sectors.length,
                         itemBuilder: (context, index) {
-                          bool isSelected = _sectorCurrentIndex == index;
+                          bool isSelected = index == _sectorCurrentIndex;
                           return GestureDetector(
                             onTap: () => _onSectorTapped(index),
                             child: Container(
@@ -123,12 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) =>
-                        const SizedBox(width: 25),
+                        separatorBuilder: (_, __) => const SizedBox(width: 25),
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   CustomPopupMenu(
                     menuItems: [
                       PopupMenuItem(
@@ -137,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ConstrainedBox(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 150,
                                 maxHeight: 200,
                               ),
@@ -146,30 +152,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: List.generate(
                                     sectors.length,
-                                        (index) =>
-                                        PopupMenuItem(
-                                          child: Text(
-                                            showNameSectors(
-                                                sectors[index].name),
-                                          ),
-                                          onTap: () {
-                                            _onSectorTapped(index);
-                                            print("${sectors[index]
-                                                .name} dipilih");
-                                          },
-                                        ),
+                                        (index) => PopupMenuItem(
+                                      child: Text(
+                                          showNameSectors(sectors[index].name)),
+                                      onTap: () {
+                                        _onSectorTapped(index);
+                                        print(
+                                            "Sektor dipilih: ${sectors[index].toJson()}");
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            // Divider tetap di bawah
-                            PopupMenuDivider(),
-                            // "Pengaturan" tetap di bawah
+                            const PopupMenuDivider(),
                             PopupMenuItem(
                               child: Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
-                                children: [
+                                children: const [
                                   Text(
                                     "Kelola Sektor",
                                     style: TextStyle(
@@ -183,16 +184,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => ManagerSectors()));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ManagerSectors(),
+                                  ),
+                                );
                               },
                             ),
                           ],
                         ),
                       ),
                     ],
-                    offset: Offset(-145, 5),
-                    child: Icon(
+                    offset: const Offset(-145, 5),
+                    child: const Icon(
                       BootstrapIcons.list,
                       size: 24,
                     ),
@@ -202,59 +207,122 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           const SizedBox(height: 16),
-          //.. List Devices (Perangkat)
+          // List Devices (Grid 2 kolom per sektor)
           Expanded(
             child: StreamBuilder<List<Sectors>>(
               stream: SectorsServices.sectorStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text("Tidak ada sektor tersedia."));
+              builder: (context, sectorSnapshot) {
+                final sectors = sectorSnapshot.data ?? [];
+                if (sectors.isEmpty) {
+                  return const Center(child: Text("Tidak ada sektor."));
                 }
+                return PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) => _onPageChanged(index),
+                  itemCount: sectors.length,
+                  itemBuilder: (context, pageIndex) {
+                    // Debug print data sektor aktif
+                    print("Menampilkan sektor: ${sectors[pageIndex].toJson()}");
+                    final currentSectorId = sectors[pageIndex].id;
+                    return SingleChildScrollView(
+                      child: StreamBuilder<List<Devices>>(
+                        stream: DevicesServices.devicesStream,
+                        builder: (context, deviceSnapshot) {
+                          final allDevices = deviceSnapshot.data ?? [];
+                          // Debug: print seluruh data devices
+                          print("Data Devices: ${allDevices.map((d) => d.toJson()).toList()}");
+                          final sectorDevices = allDevices
+                              .where((d) => d.sectors_id == currentSectorId)
+                              .toList();
 
-                // Perbarui daftar sektor secara real-time
-                final sectors = snapshot.data!;
+                          print("Devices pada sektor $currentSectorId: ${sectorDevices.map((d) => d.toJson()).toList()}");
 
-                return StatefulBuilder(
-                  builder: (context, setStatePageView) {
-                    return PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (index) => _onPageChanged(index),
-                      itemCount: sectors.length,
-                      itemBuilder: (context, index) {
-                        return SingleChildScrollView(
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            color: Colors.white,
-                            child: Container(
-                              padding: const EdgeInsets.all(18.0),
-                              width: double.infinity,
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'images/plant_design.png',
-                                    fit: BoxFit.cover,
-                                    width: 200,
-                                    height: 100,
-                                  ),
-                                  SizedBox(height: 18),
-                                  Text(
-                                    "Tidak Ada Perangkat",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: ThemeApp.seasalt,
-                                    ),
-                                  ),
-                                ],
+                          print("👉 Filtering devices untuk sektor ID: $currentSectorId");
+                          for (var d in allDevices) {
+                            print("Device ${d.name_device} sector_id: ${d.sectors_id}");
+                          }
+                          if (sectorDevices.isEmpty) {
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(18.0),
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'images/plant_design.png',
+                                        fit: BoxFit.cover,
+                                        width: 200,
+                                        height: 100,
+                                      ),
+                                      const SizedBox(height: 18),
+                                      const Text(
+                                        "Tidak Ada Perangkat",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: ThemeApp.seasalt,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: sectorDevices.length,
+                            padding: const EdgeInsets.all(8),
+                            gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1.2,
                             ),
-                          ),
-                        );
-                      },
+                            itemBuilder: (context, gridIndex) {
+                              final device = sectorDevices[gridIndex];
+                              print("Menampilkan device: ${device.toJson()}");
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                elevation: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        BootstrapIcons.device_hdd,
+                                        size: 30,
+                                        color: ThemeApp.eerieBlack,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        device.name_device,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     );
                   },
                 );

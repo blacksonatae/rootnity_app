@@ -10,7 +10,8 @@ class SectorsServices {
       StreamController<List<Sectors>>.broadcast();
 
   //.. Getter untuk stream
-  static Stream<List<Sectors>> get sectorStream => _sectorStreamController.stream;
+  static Stream<List<Sectors>> get sectorStream =>
+      _sectorStreamController.stream;
 
   //.. Ambil data sektor dari local jika ada
   static Future<List<Sectors>> getStoreSectors() async {

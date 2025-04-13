@@ -1,21 +1,21 @@
 class Devices {
   final int id;
-  final int sector_id;
-  final String token_devices_user;
+  final int sectors_id;
+  final String name_device;
 
   //.. Constuctor pada sectors untuk menyimpan data sektor
   Devices({
     required this.id,
-    required this.sector_id,
-    required this.token_devices_user,
+    required this.sectors_id,
+    required this.name_device,
   });
 
   //.. Convert JSON ke Object
   factory Devices.fromJson(Map<String, dynamic> json) {
     return Devices(
-      id: json['id'] ?? 0,
-      sector_id: json['name_sectors'] ?? '',
-      token_devices_user: json['token_devices_user'] ?? '',
+      id: json['id'],
+      sectors_id: json['sectors_id'],
+      name_device: json['name_device'],
     );
   }
 
@@ -23,8 +23,8 @@ class Devices {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'sector_id': sector_id,
-      'token_devices_user': token_devices_user,
+      'sector_id': sectors_id,
+      'name_device': name_device,
     };
   }
 }
