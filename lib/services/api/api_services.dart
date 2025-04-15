@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:rootnity_app/services/uri_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
-  //.. URL API Laravel
+  //.. URI API Laravel
   static final _dio = Dio(
     BaseOptions(
-        baseUrl: "https://8b02-125-167-59-224.ngrok-free.app/api",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }),
+      baseUrl: "${UriServices.uri_domain}/api",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    ),
   );
-
+  
   //.. Method GET untuk mengambil data dari server
   static Future<Response?> getData(String endPoint, context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
