@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
 
   //.. fungsi onRefresh untuk merefresh halaman
   void _onRefresh() async {
-
+    
   }
 
   @override

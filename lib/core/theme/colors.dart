@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Colors {
+class RootColors {
   //.. Roots colors untuk custom warna
   static const Color kellyGreen = Color(0xFF6EC207);
   static const Color eerieBlack = Color(0xFF181C14);
