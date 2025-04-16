@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 class CanvasLayout extends StatelessWidget {
   final bool isPadding;
-  final EdgeInsets? padding;
   final Widget child;
+  final EdgeInsets? padding;
 
-  const CanvasLayout(
-      {super.key, required this.child, this.isPadding = false, this.padding});
+  const CanvasLayout({
+    super.key,
+    required this.child,
+    this.isPadding = false,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,9 @@ class CanvasLayout extends StatelessWidget {
         //.. Padding
         child: isPadding
             ? Padding(
-                padding: padding ?? EdgeInsets.zero,
+                padding: padding ??
+                    const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 18.0),
                 child: child,
               )
             : child,

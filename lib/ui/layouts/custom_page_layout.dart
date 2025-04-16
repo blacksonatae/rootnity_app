@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rootnity_app/ui/layouts/canvas_layout.dart';
 
 /*
@@ -8,42 +9,53 @@ import 'package:rootnity_app/ui/layouts/canvas_layout.dart';
 
 class CustomPageLayout extends StatelessWidget {
   final List<Widget> leadingWidget; //./ Header menu
-  final List<Widget> body; //.. Konten
+  final Widget body; //.. Konten
+  final RefreshController? refreshController;
+  final VoidCallback? onRefresh;
+  final bool enableRefresh;
+
   const CustomPageLayout({
     super.key,
     required this.leadingWidget,
     required this.body,
+    required this.refreshController,
+    required this.onRefresh,
+    this.enableRefresh = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return CanvasLayout(
       isPadding: true,
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 18.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //.. Header widget
+          //.. Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            //.. leading widget
             children: leadingWidget.isNotEmpty
                 ? leadingWidget
                 : [const SizedBox.shrink()],
           ),
-          //.. Konten
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: body,
-              ),
-            ),
+            child:
+                enableRefresh && refreshController != null && onRefresh != null
+                    ? SmartRefresher(
+                        controller: refreshController!,
+                        onRefresh: onRefresh,
+                        child: _buildContent(),
+                      )
+                    : _buildContent(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    return SingleChildScrollView(
+      child: body,
     );
   }
 }
