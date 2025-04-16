@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootnity_app/ui/screens/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           cursorColor: Colors.grey, //.. Untuk warna cursor
         ),
       ),
-      home: isLoggedIn ? null : null,
+      home: Login(),
     );
   }
 }

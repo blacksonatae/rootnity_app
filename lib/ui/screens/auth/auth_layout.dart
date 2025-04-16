@@ -18,7 +18,7 @@ class AuthLayout extends StatelessWidget {
             AspectRatio(
               aspectRatio: 1.45,
               child: Image.asset(
-                "",
+                "images/pexels-mdsnmdsnmdsn-1216345.jpg",
                 fit: BoxFit.cover,
               ),
             ),
