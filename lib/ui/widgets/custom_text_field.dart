@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
+import 'package:rootnity_app/core/utils/helpers/validators.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -55,7 +56,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        errorText: widget.errorText,
+        errorText: Validators().capitalize(widget.errorText),
         suffixIcon: widget.isPassword
             ? IconButton(
                 onPressed: () {

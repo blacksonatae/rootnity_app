@@ -1,3 +1,3 @@
 class UriServices {
-  static final String uri_domain = "https://34dd-116-90-214-49.ngrok-free.app";
+  static final String uri_domain = "https://8dc0-180-254-164-51.ngrok-free.app";
 }

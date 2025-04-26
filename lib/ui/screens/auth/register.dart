@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/core/utils/helpers/navigator_helper.dart';
+import 'package:rootnity_app/services/controller/auth_services.dart';
 import 'package:rootnity_app/ui/screens/auth/auth_layout.dart';
 import 'package:rootnity_app/ui/screens/auth/login.dart';
 import 'package:rootnity_app/ui/widgets/custom_elevated_button.dart';
@@ -21,8 +22,27 @@ class _RegisterState extends State<Register> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  //.. Variabel untuk mengampung error dari API
+  Map<String, dynamic>? errors = {};
+
   //.. Fungsi untuk register
-  void _register() async {}
+  void _register() async {
+    var result = await AuthServices.register(
+        nameController.text,
+        emailController.text,
+        passwordController.text,
+        confirmPasswordController.text,
+        context);
+
+    //.. Kondisi jika status true maka akan diarahkan ke halaman main
+    if (result['status'] == 'true') {}
+
+    if(result['status'] == false) {
+      setState(() {
+        errors = result['errors'] ?? {};
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +54,7 @@ class _RegisterState extends State<Register> {
         CustomTextField(
           controller: nameController,
           label: "Name",
+          errorText: errors?['name']?.first,
         ),
         const SizedBox(height: 20),
         //.. Email
@@ -54,11 +75,12 @@ class _RegisterState extends State<Register> {
           controller: confirmPasswordController,
           label: "Confirm Password",
           isPassword: true,
+          errorText: errors?['confirm_password']?.first,
         ),
         const SizedBox(height: 20),
         //.. Button Login
         CustomElevatedButton(
-          nameButton: "Login",
+          nameButton: "Register",
           onPressed: () => _register(),
         ),
         const SizedBox(height: 20),
