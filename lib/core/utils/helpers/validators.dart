@@ -1,6 +1,7 @@
 class Validators {
   //.. Mengubah huruf teks jadi kapital
-  String capitalize(String? text) {
-    return text[0].toUpperCase().substring(1).toLowerCase();
+  static String capatilize(String text) {
+    if(text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
   }
 }

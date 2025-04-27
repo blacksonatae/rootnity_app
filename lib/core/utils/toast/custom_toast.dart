@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 enum ToastPosition { top, center, bottom }
 
 class CustomToast {
+  static OverlayEntry? _currentToast;
+
   static void show({
     required BuildContext context,
     required String message,
@@ -13,6 +15,11 @@ class CustomToast {
   }) {
     final overlay = Overlay.of(context);
 
+    //.. Menghapus toast sebelumnya jika ada
+    _currentToast?.remove();
+    _currentToast = null;
+
+    //.. Konfigurasi posisi dan ukuran pada toast
     final mediaQuery = MediaQuery.of(context);
     final double topPadding = mediaQuery.padding.top;
     final double buttomPadding = mediaQuery.viewInsets.bottom;
@@ -31,7 +38,7 @@ class CustomToast {
         break;
       case ToastPosition.bottom:
         alignment = Alignment.bottomCenter;
-        margin = EdgeInsets.only(bottom: buttomPadding + 20.0);
+        margin = EdgeInsets.only(bottom: buttomPadding + 15.0);
         break;
     }
 
@@ -43,7 +50,15 @@ class CustomToast {
             alignment: alignment,
             child: Container(
               margin: margin,
-              child: _buildToast(message, backgroundColor, opacity),
+              child: _ToastWidget(
+                message: message,
+                duration: duration,
+                backgroundColor: backgroundColor,
+                opacity: opacity,
+                onDismissed: () {
+                  _currentToast = null;
+                },
+              ),
             ),
           ),
         ),
@@ -51,22 +66,78 @@ class CustomToast {
     );
 
     overlay.insert(overlayEntry);
-    Future.delayed(duration).then((_) => overlayEntry.remove());
+    _currentToast = overlayEntry;
+  }
+}
+
+class _ToastWidget extends StatefulWidget {
+  final String message;
+  final Duration duration;
+  final Color backgroundColor;
+  final double opacity;
+  final VoidCallback onDismissed;
+
+  const _ToastWidget(
+      {super.key,
+      required this.message,
+      required this.duration,
+      required this.backgroundColor,
+      required this.opacity,
+      required this.onDismissed});
+
+  @override
+  State<_ToastWidget> createState() => _ToastWidgetState();
+}
+
+class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    )..forward();
+
+    _animationController.forward();
+
+    Future.delayed(widget.duration, () async {
+      if (!mounted) return;
+
+      await _animationController.reverse();
+      widget.onDismissed();
+    });
   }
 
-  static Widget _buildToast(String message, Color bgColor, double opacity) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: bgColor.withOpacity(opacity),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          message,
-          style: const TextStyle(color: Colors.white, fontSize: 15),
-          textAlign: TextAlign.center,
+  @override
+  void dispose() {
+    if (_animationController.isAnimating) {
+      _animationController.stop();
+    }
+    _animationController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animationController,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: widget.backgroundColor.withOpacity(widget.opacity),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            widget.message,
+            style: const TextStyle(color: Colors.white, fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );

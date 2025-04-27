@@ -61,6 +61,7 @@ class _RegisterState extends State<Register> {
         CustomTextField(
           controller: emailController,
           label: "Email",
+          errorText: errors?['email']?.first,
         ),
         const SizedBox(height: 20),
         //.. Password
@@ -68,6 +69,7 @@ class _RegisterState extends State<Register> {
           controller: passwordController,
           label: "Password",
           isPassword: true,
+          errorText: errors?['password']?.first,
         ),
         const SizedBox(height: 20),
         //.. Confirm Password
@@ -77,7 +79,7 @@ class _RegisterState extends State<Register> {
           isPassword: true,
           errorText: errors?['confirm_password']?.first,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
         //.. Button Login
         CustomElevatedButton(
           nameButton: "Register",

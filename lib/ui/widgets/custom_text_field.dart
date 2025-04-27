@@ -56,7 +56,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        errorText: Validators().capitalize(widget.errorText),
+        errorText: widget.errorText != null
+            ? Validators.capatilize(widget.errorText!)
+            : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 onPressed: () {

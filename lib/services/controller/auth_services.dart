@@ -1,3 +1,6 @@
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rootnity_app/core/theme/colors.dart';
+import 'package:rootnity_app/core/utils/toast/custom_toast.dart';
 import 'package:rootnity_app/services/api/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,9 +17,7 @@ class AuthServices {
       context,
     );
 
-    print(response);
-
-    if (response != null && response.statusCode == 201) {
+    if (response != null && response.statusCode == 200) {
       var data = response.data['data'];
       //.. Informasi name, email, dan token akan masuk kedalam method AccountPreferences
       AccountPreferences(data['token'], data['name'], data['email']);
@@ -27,8 +28,10 @@ class AuthServices {
         'errors': response.data['errors']
       }; //.. Menampilkan pesan error pada masing masing textfield
     } else {
+      //.. Menampilkan toast error
+      CustomToast.show(context: context, message: "Terjadi Kesalahan", position: ToastPosition.bottom, backgroundColor: RootColors.redPantone);
       return {
-        'status': false
+        'status': false,
       }; //.. Malah sebaliknya jika false maka halaman home tidak dapat diarahkan
     }
   }
@@ -58,6 +61,7 @@ class AuthServices {
         'errors': response.data['errors']
       }; //.. Menampilkan pesan error pada masing masing textfield
     } else {
+      CustomToast.show(context: context, message: "Terjadi Kesalahan", position: ToastPosition.bottom, backgroundColor: RootColors.redPantone);
       return {
         'status': false
       }; //.. Malah sebaliknya jika false maka halaman home tidak dapat diarahkan
