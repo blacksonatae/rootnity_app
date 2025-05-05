@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-/**
- * File: BaseLayout
- * -> Sebagai dasar yang menggabungkan header (Custom Header Widget), konten, SmartRefresher, dan footer (CustomFooterWidget)
- */
+/*
+* File BaseLayout -> Layout dasar yang menggabung header, konten, dan footer
+* */
 
 class BaseLayout extends StatelessWidget {
   final Widget content;
@@ -12,13 +11,12 @@ class BaseLayout extends StatelessWidget {
   final VoidCallback? onRefresh;
   final bool enableRefresh;
 
-  const BaseLayout({
-    super.key,
-    required this.content,
-    this.refreshController,
-    this.onRefresh,
-    this.enableRefresh = false,
-  });
+  const BaseLayout(
+      {super.key,
+      required this.content,
+      this.refreshController,
+      this.onRefresh,
+      this.enableRefresh = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +26,20 @@ class BaseLayout extends StatelessWidget {
             enablePullDown: true,
             header: null,
             onRefresh: onRefresh,
-            child: _buildContent(),
-          )
+            child: _buildContent())
         : _buildContent();
   }
 
   Widget _buildContent() {
     return Column(
       children: [
+        //.. Header
+        
+        //.. Content
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: content,
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: content),
         ),
       ],
     );
