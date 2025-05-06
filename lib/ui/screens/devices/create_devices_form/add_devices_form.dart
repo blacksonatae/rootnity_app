@@ -3,15 +3,16 @@ import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/ui/layouts/main/base_layout.dart';
 import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
 
-class SectorsAddScreen extends StatefulWidget {
-  const SectorsAddScreen({super.key});
+class AddDevicesForm extends StatefulWidget {
+  const AddDevicesForm({super.key});
 
   @override
-  State<SectorsAddScreen> createState() => _SectorsAddScreenState();
+  State<AddDevicesForm> createState() => _AddDevicesFormState();
 }
 
-class _SectorsAddScreenState extends State<SectorsAddScreen> {
-  final TextEditingController nameSectors = TextEditingController();
+class _AddDevicesFormState extends State<AddDevicesForm> {
+  final TextEditingController nameDevices = TextEditingController();
+  List<Map<String, dynamic>> sectors = [];
 
   Map<String, dynamic>? errors;
 
@@ -27,7 +28,7 @@ class _SectorsAddScreenState extends State<SectorsAddScreen> {
           ),
         ),
         Text(
-          "Tambahkan Sektor",
+          "Final Tambahkan Perangkat",
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
@@ -48,27 +49,19 @@ class _SectorsAddScreenState extends State<SectorsAddScreen> {
         children: [
           //.. Heading
           Text(
-            "Tambahkan Sektor Baru",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: RootColors.eerieBlack,
-            ),
-          ),
-          SizedBox(height: 7.5),
-          //.. Text Keterangan
-          Text(
-            "Masukan nama sektor untuk menambah sektor baru !",
+            "Tambahkan perangkat baru dengan memasukkan nama perangkat dan sektor yang dipilih.",
             style: TextStyle(fontSize: 14.5, color: RootColors.seasalt),
             textAlign: TextAlign.justify,
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 30),
           //.. Text Field
           CustomTextField(
-            controller: nameSectors,
-            label: "Masukkan Sektor",
-            errorText: errors?['name_sectors']?.first,
+            controller: nameDevices,
+            label: "Nama Perangkat",
+            errorText: errors?['name_device']?.first,
           ),
+          SizedBox(height: 20),
+          //.. Select Dropdown Sector Form
         ],
       ),
     );
