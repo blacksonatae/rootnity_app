@@ -6,7 +6,7 @@ class Sector {
   final String nameSectors;
   final List<Device>? devices;
 
-  //.. Constructor pada Sector untuk menyimpan data sektor
+  //.. Constructor pada sectors untuk menyimpan data sektor
   Sector({
     required this.id,
     required this.nameSectors,

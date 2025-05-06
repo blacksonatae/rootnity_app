@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rootnity_app/ui/layouts/main/base_layout.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
+class Profile extends StatefulWidget {
+  const Profile({super.key});
+  
   @override
-  State<Home> createState() => _HomeState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _HomeState extends State<Home> {
+class _ProfileState extends State<Profile> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
       onRefresh: _onRefresh,
       enableRefresh: true,
       content: Center(
-        child: Text("Home"),
+        child: Text("Profile"),
       ),
     );
   }
