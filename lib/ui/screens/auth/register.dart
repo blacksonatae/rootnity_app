@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/core/utils/helpers/navigator_helper.dart';
 import 'package:rootnity_app/services/controller/auth_services.dart';
+import 'package:rootnity_app/ui/layouts/main_screen.dart';
 import 'package:rootnity_app/ui/screens/auth/auth_layout.dart';
 import 'package:rootnity_app/ui/screens/auth/login.dart';
 import 'package:rootnity_app/ui/widgets/custom_elevated_button.dart';
@@ -35,7 +36,9 @@ class _RegisterState extends State<Register> {
         context);
 
     //.. Kondisi jika status true maka akan diarahkan ke halaman main
-    if (result['status'] == 'true') {}
+    if (result['status'] == 'true') {
+      NavigatorHelper.pushReplacement(context, const MainScreen());
+    }
 
     if(result['status'] == false) {
       setState(() {

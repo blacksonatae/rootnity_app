@@ -37,9 +37,12 @@ class SectorsServices {
   static Future<void> fetchSectors(context) async {
     try {
       var response = await ApiServices.getData('/sectors', context);
+
       if (response != null && response.statusCode == 200) {
         List data = response.data['data'];
         List<Sector> sectors = data.map((sector) => Sector.fromJson(sector)).toList();
+
+        print("Sektor : ${sectors.map((e) => e.toJson()).toList()}");
 
         _streamController.add(sectors);
         await saveSectorToLocal(sectors);
@@ -53,4 +56,26 @@ class SectorsServices {
       _streamController.add(storedSectors);
     }
   }
+
+  //.. Create Sectors -> mengirim data sektor baru ke API
+  static Future<Map<String, dynamic>> createSectors(
+      String nameSectors, context) async {
+    var response = await ApiServices.postData(
+      '/sectors',
+      {
+        'name_sectors': nameSectors,
+      },
+      context,
+    );
+
+    if (response != null && response.statusCode == 201) {
+      fetchSectors(context);
+      return {'status': true};
+    } else if (response != null && response.statusCode == 422) {
+      return {'status': false, 'errors': response.data['errors']};
+    } else {
+      return {'status': false};
+    }
+  }
+
 }

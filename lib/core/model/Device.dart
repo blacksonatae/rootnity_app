@@ -24,7 +24,7 @@ class Device {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'sector_id': sectorsId,
+      'sectors_id': sectorsId,
       'name_devices': nameDevices,
     };
   }

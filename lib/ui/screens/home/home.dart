@@ -1,11 +1,12 @@
-import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rootnity_app/core/model/Device.dart';
 import 'package:rootnity_app/core/model/Sector.dart';
-import 'package:rootnity_app/core/theme/colors.dart';
+import 'package:rootnity_app/services/controller/devices_services.dart';
 import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/main/base_layout.dart';
-import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
+import 'package:rootnity_app/ui/screens/devices/list_devices.dart';
+import 'package:rootnity_app/ui/screens/sectors/list_sectors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,21 +18,24 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  final PageController _pageController = PageController();
   final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController();
 
   int _sectorCurrentIndex = 0;
 
-  void _onRefresh() async {
-    await Future.delayed(const Duration(seconds: 2));
-    _refreshController.refreshCompleted();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SectorsServices.fetchSectors(context);
+    DevicesServices.fetchDevices(context);
   }
 
-  // Fungsi untuk mengurangi panjang nama sektor
-  String showNameSectors(String nameSectors) {
-    return (nameSectors.length > 12)
-        ? "${nameSectors.substring(0, 12)}..."
-        : nameSectors;
+  void _onRefresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+    await SectorsServices.fetchSectors(context);
+    await DevicesServices.fetchDevices(context);
+    _refreshController.refreshCompleted();
   }
 
   void _onPageChanged(int index) {
@@ -74,106 +78,24 @@ class _HomeState extends State<Home> {
           //.. List Sektor menggunakan Stream Builder
           StreamBuilder<List<Sector>>(
             stream: SectorsServices.sectorStream,
-            builder: (context, snapshot) {
-              final sectors = snapshot.data ?? [];
-              //.. List Sektor dan Menu dibungkus dalam baris
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 40,
-                      child: ListView.separated(
-                        itemCount: sectors.length,
-                        separatorBuilder: (context, snapshoot) =>
-                            const SizedBox(
-                          width: 25,
-                        ),
-                        itemBuilder: (context, index) {
-                          bool isSelected = index == _sectorCurrentIndex;
+            builder: (context, sector) {
+              final sectors = sector.data ?? [];
 
-                          return GestureDetector(
-                            onTap: () => (),
-                            child: Text(
-                              showNameSectors(sectors[index].nameSectors),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: isSelected
-                                    ? RootColors.eerieBlack
-                                    : RootColors.seasalt,
-                                fontWeight: isSelected
-                                    ? FontWeight.w500
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  //.. Menu yang berisi daftar sektor dan manager sektor
-                  CustomPopupMenu(
-                    menuItems: [
-                      PopupMenuItem(
-                        enabled: false,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxWidth: 150,
-                                maxHeight: 200,
-                              ),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: List.generate(
-                                    sectors.length,
-                                    (index) => PopupMenuItem(
-                                      child: Text(showNameSectors(
-                                          sectors[index].nameSectors)),
-                                      onTap: () {
-                                        _onSectorTapped(index);
-                                        print(
-                                            "Sektor dipilih: ${sectors[index].toJson()}");
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const PopupMenuDivider(),
-                            PopupMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    "Kelola Sektor",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Icon(
-                                    BootstrapIcons.tablet,
-                                    size: 14,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    offset: const Offset(-145, 5),
-                    child: const Icon(
-                      BootstrapIcons.list,
-                      size: 24,
-                    ),
-                  ),
-                ],
+              if (sectors.isEmpty) {
+                //  ➜ Tampilkan pesan jika belum ada sektor
+                return const Center(
+                  child: Text("Tidak ada sektor yang tersedia."),
+                );
+              }
+
+              //.. List Sektor dan Menu dibungkus dalam baris
+              return ListSectors(
+                sectors: sectors,
+                scrollController: _scrollController,
+                sectorsCurrentIndex: _sectorCurrentIndex,
+                onSectorsTap: (index) {
+                  _onSectorTapped(index);
+                },
               );
             },
           ),
@@ -182,15 +104,27 @@ class _HomeState extends State<Home> {
           Expanded(
             child: StreamBuilder<List<Sector>>(
               stream: SectorsServices.sectorStream,
-              builder: (context, snapshot) {
-                final sectors = snapshot.data ?? [];
-                return PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (index) => _onPageChanged(index),
-                  itemCount: sectors.length,
-                  itemBuilder: (context, device) {
-                    final devices = snapshot.data ?? [];
-                    return Card();
+              builder: (context, sector) {
+                final sectors = sector.data ?? [];
+                return StreamBuilder<List<Device>>(
+                  stream: DevicesServices.devicesStream,
+                  builder: (context, device) {
+                    final devices = device.data ?? [];
+
+                    return PageView.builder(
+                      controller: _pageController,
+                      itemCount: sectors.length,
+                      onPageChanged: _onPageChanged,
+                      itemBuilder: (context, index) {
+                        final sector = sectors[index];
+                        //.. Filter devices OOP
+                        final sectorDevices = devices.where((device) => device.sectorsId == sector.id).toList();
+
+                        return SingleChildScrollView(
+                          child: ListDevices(devices: sectorDevices),
+                        );
+                      },
+                    );
                   },
                 );
               },

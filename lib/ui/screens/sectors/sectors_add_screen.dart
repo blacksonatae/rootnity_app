@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
+import 'package:rootnity_app/services/controller/sectors_services.dart';
 import 'package:rootnity_app/ui/layouts/main/base_layout.dart';
 import 'package:rootnity_app/ui/widgets/custom_text_field.dart';
 
@@ -14,6 +15,20 @@ class _SectorsAddScreenState extends State<SectorsAddScreen> {
   final TextEditingController nameSectors = TextEditingController();
 
   Map<String, dynamic>? errors;
+
+  void _addSectors() async {
+    var result = await SectorsServices.createSectors(nameSectors.text, context);
+
+    if (result['status'] == false) {
+      setState(() {
+        errors = result['errors'] ?? {};
+      });
+    }
+
+    if (result['status'] == true) {
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +51,7 @@ class _SectorsAddScreenState extends State<SectorsAddScreen> {
         ),
         GestureDetector(
           //.. Mengarah ke halaman konfigurasi wifi
-          onTap: () => (),
+          onTap: () => _addSectors(),
           child: Icon(
             Icons.check,
             color: RootColors.brandeisBlue,

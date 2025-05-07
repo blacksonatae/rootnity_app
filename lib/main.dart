@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           cursorColor: Colors.grey, //.. Untuk warna cursor
         ),
       ),
-      home: MainScreen(),
+      home: isLoggedIn ? MainScreen() : Login(),
     );
   }
 }
