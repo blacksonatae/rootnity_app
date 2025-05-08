@@ -2,13 +2,13 @@ class Device {
   //.. Variabel
   final int id;
   final int sectorsId;
-  final String nameDevices;
+  final String nameDevice;
 
   //.. Constructor pada Device untuk menyimpan data device
   Device({
     required this.id,
     required this.sectorsId,
-    required this.nameDevices,
+    required this.nameDevice,
   });
 
   //.. Convert JSON to Object
@@ -16,7 +16,7 @@ class Device {
     return Device(
       id: json['id'],
       sectorsId: json['sectors_id'],
-      nameDevices: json['name_devices'],
+      nameDevice: json['name_device'],
     );
   }
 
@@ -25,7 +25,7 @@ class Device {
     return {
       'id': id,
       'sectors_id': sectorsId,
-      'name_devices': nameDevices,
+      'name_device': nameDevice,
     };
   }
 }
