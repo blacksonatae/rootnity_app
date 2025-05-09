@@ -1,19 +1,19 @@
 class Sector {
   //.. Variabel
   final int id;
-  final String nameSector;
+  final String name;
 
   //.. Constructor pada sectors untuk menyimpan data sektor
   Sector({
     required this.id,
-    required this.nameSector,
+    required this.name,
   });
 
   //.. Convert JSON ke Object
   factory Sector.fromJson(Map<String, dynamic> json) {
     return Sector(
       id: json['id'],
-      nameSector: json['name_sector'],
+      name: json['name_sectors'],
     );
   }
 
@@ -21,7 +21,7 @@ class Sector {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name_sector': nameSector,
+      'name_sectors': name,
     };
   }
 }
