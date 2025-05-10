@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rootnity_app/ui/widgets/custom_footer_widget.dart';
 import 'package:rootnity_app/ui/widgets/custom_header_widget.dart';
 import 'package:rootnity_app/ui/widgets/custom_refresh_status.dart';
 
@@ -10,7 +11,7 @@ import 'package:rootnity_app/ui/widgets/custom_refresh_status.dart';
 
 class Baselayout extends StatelessWidget {
   //.. Konten utama
-  final Widget content;
+  final Widget body;
 
   //.. Refresh controller untuk pull to refresh
   final RefreshController? refreshController;
@@ -29,15 +30,18 @@ class Baselayout extends StatelessWidget {
   final int? selectedIndex;
   final ValueChanged<int>? onItemTapped;
 
+  final bool isMainScreen;
+
   const Baselayout({
     super.key,
-    required this.content,
+    required this.body,
     this.refreshController,
     this.onRefresh,
     this.leadingWidgets,
-    required this.footerWidgets,
+    this.footerWidgets = false,
     this.selectedIndex,
     this.onItemTapped,
+    this.isMainScreen = false,
   });
 
   @override
@@ -49,11 +53,34 @@ class Baselayout extends StatelessWidget {
       onRefresh: onRefresh,
       child: Column(
         children: [
+          //.. Header
           if (leadingWidgets != null)
-            ...?leadingWidgets
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: leadingWidgets!.isNotEmpty
+                  ? leadingWidgets!
+                  : [const SizedBox.shrink()],
+            )
           else
             const CustomHeaderWidget(),
-          
+
+          //.. Konten utama dengan padding
+          Expanded(
+            child: isMainScreen
+                ? SingleChildScrollView(
+                    child: body,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: body,
+                  ),
+          ),
+
+          //.. Footer jika diaktifkan
+          if (footerWidgets)
+            CustomFooterWidget(
+                selectedIndex: selectedIndex ?? 0,
+                onItemTapped: onItemTapped ?? (_) {}),
         ],
       ),
     );
