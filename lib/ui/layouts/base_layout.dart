@@ -55,11 +55,14 @@ class Baselayout extends StatelessWidget {
         children: [
           //.. Header
           if (leadingWidgets != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: leadingWidgets!.isNotEmpty
-                  ? leadingWidgets!
-                  : [const SizedBox.shrink()],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: leadingWidgets!.isNotEmpty
+                    ? leadingWidgets!
+                    : [const SizedBox.shrink()],
+              ),
             )
           else
             const CustomHeaderWidget(),
@@ -67,8 +70,11 @@ class Baselayout extends StatelessWidget {
           //.. Konten utama dengan padding
           Expanded(
             child: isMainScreen
-                ? SingleChildScrollView(
-                    child: body,
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: SingleChildScrollView(
+                      child: body,
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),

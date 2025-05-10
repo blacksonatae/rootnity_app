@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rootnity_app/core/models/device.dart';
+import 'package:rootnity_app/core/models/sector.dart';
 import 'package:rootnity_app/data/controllers/devices_controller.dart';
 import 'package:rootnity_app/data/controllers/sectors_controller.dart';
 import 'package:rootnity_app/data/storages/devices_storage.dart';
 import 'package:rootnity_app/data/storages/sectors_storage.dart';
 import 'package:rootnity_app/ui/layouts/base_layout.dart';
+import 'package:rootnity_app/ui/screens/devices/list_devices.dart';
+import 'package:rootnity_app/ui/screens/sectors/list_sectors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,7 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   final ScrollController _scrollController = ScrollController();
   final PageController _pageController = PageController();
 
@@ -39,10 +43,15 @@ class _HomeState extends State<Home> {
   }
 
   void _onRefresh() async {
-    await SectorsController.fetchSectors(
-        context); // Fetch Sector jika merefresh halaman
-    await DevicesController.fetchDevices(context); // Fetch Devices jika merefresh halaman
-    _refreshController.refreshCompleted();
+    try {
+      await SectorsController.fetchSectors(
+          context); // Fetch Sector jika merefresh halaman
+      await DevicesController.fetchDevices(
+          context); // Fetch Devices jika merefresh halaman
+      _refreshController.refreshCompleted();
+    } catch (e) {
+      _refreshController.refreshFailed();
+    }
   }
 
   void _onPageChanged(int index) {
@@ -78,7 +87,54 @@ class _HomeState extends State<Home> {
     return Baselayout(
       refreshController: _refreshController,
       onRefresh: _onRefresh,
-      body: Column(),
+      body: Column(
+        children: [
+          StreamBuilder<List<Sector>>(
+            stream: SectorsStorage.sectorStream,
+            builder: (context, sector) {
+              final sectors = sector.data ?? [];
+
+              return ListSectors(
+                sectors: sectors,
+                sectorCurrentIndex: _sectorCurrentIndex,
+                scrollController: _scrollController,
+                onSectorsTap: (index) {
+                  _onSectorTapped(index);
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: StreamBuilder<List<Sector>>(
+              stream: SectorsStorage.sectorStream,
+              builder: (context, sector) {
+                final sectors = sector.data ?? [];
+                return StreamBuilder<List<Device>>(
+                  stream: DevicesStorage.deviceStream,
+                  builder: (context, index) {
+                    final device = index.data ?? [];
+
+                    return PageView.builder(
+                      controller: _pageController,
+                      itemCount: sectors.length,
+                      onPageChanged: _onPageChanged,
+                      itemBuilder: (context, index) {
+                        final sector = sectors[index];
+                        final devices = device
+                            .where((device) => device.sectorId == sector.id)
+                            .toList();
+
+                        return ListDevices(devices: devices);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
