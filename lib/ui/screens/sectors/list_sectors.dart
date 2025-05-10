@@ -85,8 +85,6 @@ class ListSectors extends StatelessWidget {
                             ),
                             onTap: () {
                               onSectorsTap(index);
-                              print(
-                                  "Sector dipilih : ${sectors[index].toJson()}");
                             },
                           ),
                         ),
