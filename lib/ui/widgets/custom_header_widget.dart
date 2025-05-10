@@ -70,7 +70,7 @@ class _CustomHeaderWidgetState extends State<CustomHeaderWidget> {
               //.. Tombol tambah sektor
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
-                onTap: () => (),
+                /*onTap: () => NavigatorHelper.push(context, const SectorsAddScreen()),*/
               ),
               //.. Tombol tambah perangkat
               PopupMenuItem(

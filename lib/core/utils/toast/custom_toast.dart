@@ -89,7 +89,8 @@ class _ToastWidget extends StatefulWidget {
   State<_ToastWidget> createState() => _ToastWidgetState();
 }
 
-class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderStateMixin {
+class _ToastWidgetState extends State<_ToastWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -135,7 +136,11 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
           ),
           child: Text(
             widget.message,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+            ),
             textAlign: TextAlign.center,
           ),
         ),
