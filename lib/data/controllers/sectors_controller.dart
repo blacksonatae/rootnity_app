@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:rootnity_app/core/models/sector.dart';
-import 'package:rootnity_app/core/services/api_services.dart';
+import 'package:rootnity_app/core/services/server/api_services.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/core/utils/toast/custom_toast.dart';
 import 'package:rootnity_app/data/storages/sectors_storage.dart';
@@ -14,7 +14,7 @@ class SectorsController {
     var response = await APIServices.getData('/sectors', context);
     if (response != null && response.statusCode == 200) {
       List sector = response.data['data'];
-      print(sector);
+
       List<Sector> sectors =
           sector.map((sector) => Sector.fromJson(sector)).toList();
 
@@ -38,7 +38,11 @@ class SectorsController {
     } else if (response != null && response.statusCode == 422) {
       return {'status': false, 'errors': response.data['errors']};
     } else {
-      CustomToast.show(context: context, message: "Terjadi kesalahan, tidak dapat menambah sektor, ", position: ToastPosition.center, backgroundColor: RootColors.redPantone);
+      CustomToast.show(
+          context: context,
+          message: "Terjadi kesalahan, tidak dapat menambah sektor, ",
+          position: ToastPosition.center,
+          backgroundColor: RootColors.redPantone);
       return {'status': false};
     }
   }

@@ -4,12 +4,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rootnity_app/core/models/device.dart';
 import 'package:rootnity_app/core/models/sector.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
+import 'package:rootnity_app/core/utils/helpers/navigator_helper.dart';
 import 'package:rootnity_app/data/controllers/devices_controller.dart';
 import 'package:rootnity_app/data/controllers/sectors_controller.dart';
 import 'package:rootnity_app/data/storages/devices_storage.dart';
 import 'package:rootnity_app/data/storages/sectors_storage.dart';
 import 'package:rootnity_app/ui/layouts/base_layout.dart';
 import 'package:rootnity_app/ui/layouts/canvas_layout.dart';
+import 'package:rootnity_app/ui/screens/sectors/sectors_create_screen.dart';
 import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
 
 class SectorsManagerScreen extends StatefulWidget {
@@ -75,7 +77,7 @@ class _SectorsManagerScreenState extends State<SectorsManagerScreen> {
                 color: RootColors.eerieBlack),
           ),
           GestureDetector(
-            onTap: () => (),
+            onTap: () => NavigatorHelper.push(context, const SectorsCreateScreen()),
             child: const Icon(
               Icons.add_circle_outline,
               color: RootColors.eerieBlack,
@@ -93,7 +95,7 @@ class _SectorsManagerScreenState extends State<SectorsManagerScreen> {
                 color: RootColors.eerieBlack,
               ),
             ),
-            SizedBox(height: 7.5),
+            SizedBox(height: 10),
             //.. Text Keterangan
             Text(
               "Anda dapat menemukan dan mengubah serta menghapus sektor.",

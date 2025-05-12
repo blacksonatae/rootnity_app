@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:rootnity_app/core/services/uri_services.dart';
+import 'package:rootnity_app/core/services/server/uri_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class APIServices {

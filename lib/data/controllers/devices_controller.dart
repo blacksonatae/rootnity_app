@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:rootnity_app/core/models/device.dart';
-import 'package:rootnity_app/core/services/api_services.dart';
+import 'package:rootnity_app/core/services/server/api_services.dart';
 import 'package:rootnity_app/data/storages/devices_storage.dart';
 
 class DevicesController {
+  //.. Fetch or ambil data dari api
   static Future<void> fetchDevices(context) async {
     var response = await APIServices.getData('/devices', context);
     if (response != null && response.statusCode == 200) {
@@ -15,4 +16,5 @@ class DevicesController {
       await DevicesStorage.saveDevicesToLocal(devices);
     }
   }
+
 }

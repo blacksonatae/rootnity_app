@@ -15,18 +15,17 @@ class DevicesStorage {
 
   static Future<void> init() async {
     final stored = await getStoreDevices();
-    print(stored);
 
-    print("🔁 Emit from init(): $stored");
     _streamController.sink.add(stored);
   }
 
   //.. Penyimpanan dari database ke local
   static Future<void> saveDevicesToLocal(List<Device> devices) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    //.. Simpan data perangkat
     String encodedData =
         jsonEncode((devices.map((device) => device.toJson()).toList()));
-
     await preferences.setString('devices', encodedData);
 
     _streamController.sink.add(devices);

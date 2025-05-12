@@ -46,49 +46,56 @@ class Baselayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      controller: refreshController!,
-      enablePullDown: true,
-      header: CustomRefreshStatus(),
-      onRefresh: onRefresh,
-      child: Column(
-        children: [
-          //.. Header
-          if (leadingWidgets != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: leadingWidgets!.isNotEmpty
-                    ? leadingWidgets!
-                    : [const SizedBox.shrink()],
-              ),
-            )
-          else
-            const CustomHeaderWidget(),
+    Widget content = Column(
+      children: [
+        //.. Header
+        if (leadingWidgets != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: leadingWidgets!.isNotEmpty
+                  ? leadingWidgets!
+                  : [const SizedBox.shrink()],
+            ),
+          )
+        else
+          const CustomHeaderWidget(),
 
-          //.. Konten utama dengan padding
-          Expanded(
-            child: isMainScreen
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: SingleChildScrollView(
-                      child: body,
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        //.. Konten utama dengan padding
+        Expanded(
+          child: isMainScreen
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: SingleChildScrollView(
                     child: body,
                   ),
-          ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: body,
+                ),
+        ),
 
-          //.. Footer jika diaktifkan
-          if (footerWidgets)
-            CustomFooterWidget(
-                selectedIndex: selectedIndex ?? 0,
-                onItemTapped: onItemTapped ?? (_) {}),
-        ],
-      ),
+        //.. Footer jika diaktifkan
+        if (footerWidgets)
+          CustomFooterWidget(
+            selectedIndex: selectedIndex ?? 0,
+            onItemTapped: onItemTapped ?? (_) {},
+          ),
+      ],
     );
+
+    if (refreshController != null && onRefresh != null) {
+      return SmartRefresher(
+        controller: refreshController!,
+        enablePullDown: true,
+        header: CustomRefreshStatus(),
+        onRefresh: onRefresh,
+        child: content,
+      );
+    } else {
+      return content;
+    }
   }
 }

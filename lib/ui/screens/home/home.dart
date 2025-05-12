@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         offset.clamp(0, _scrollController.position.maxScrollExtent),
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeInOut,
       );
     }

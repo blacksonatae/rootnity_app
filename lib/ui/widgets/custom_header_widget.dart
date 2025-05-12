@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/core/utils/helpers/navigator_helper.dart';
+import 'package:rootnity_app/ui/screens/devices/devices_create_forms/search_and_connect_devices.dart';
+import 'package:rootnity_app/ui/screens/sectors/sectors_create_screen.dart';
+import 'package:rootnity_app/ui/screens/sectors/sectors_manager_screen.dart';
 import 'package:rootnity_app/ui/widgets/custom_popupmenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,12 +73,12 @@ class _CustomHeaderWidgetState extends State<CustomHeaderWidget> {
               //.. Tombol tambah sektor
               PopupMenuItem(
                 child: Text("Tambah Sektor"),
-                /*onTap: () => NavigatorHelper.push(context, const SectorsAddScreen()),*/
+                onTap: () => NavigatorHelper.push(context, const SectorsCreateScreen()),
               ),
               //.. Tombol tambah perangkat
               PopupMenuItem(
                 child: Text("Tambah Perangkat"),
-                onTap: () => (),
+                onTap: () => NavigatorHelper.push(context, const SearchAndConnectDevices()),
               ),
             ],
             offset: Offset(-150, 30),

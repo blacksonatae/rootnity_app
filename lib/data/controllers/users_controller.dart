@@ -1,7 +1,8 @@
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rootnity_app/core/services/api_services.dart';
+import 'package:rootnity_app/core/services/server/api_services.dart';
 import 'package:rootnity_app/core/theme/colors.dart';
 import 'package:rootnity_app/core/utils/toast/custom_toast.dart';
+import 'package:rootnity_app/data/controllers/devices_controller.dart';
 import 'package:rootnity_app/data/controllers/sectors_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,7 @@ class UsersController {
       AccountPreferences(data['token'], data['name'], data['email']);
       //.. Jika berhasil maka fetch data
       SectorsController.fetchSectors(context);
+      DevicesController.fetchDevices(context);
       return {'status': true};
     } else if (response != null && response.statusCode == 422) {
       return {
@@ -59,6 +61,7 @@ class UsersController {
       AccountPreferences(data['token'], data['name'], data['email']);
       //.. Jika berhasil maka fetch data
       SectorsController.fetchSectors(context);
+      DevicesController.fetchDevices(context);
       return {'status': true};
     } else if (response != null && response.statusCode == 422) {
       return {

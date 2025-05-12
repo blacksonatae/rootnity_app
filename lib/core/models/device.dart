@@ -2,18 +2,18 @@ class Device {
   //.. Variabel
   final int id;
   final String name;
-  /*final String token;
+  final String token;
   final bool isOnline;
-  final bool isActiveAI;*/
+  final bool isActiveAI;
   final int sectorId;
 
   //.. Constructor pada Device untuk menyimpan data device
   Device({
     required this.id,
     required this.name,
-    /*required this.token,
+    required this.token,
     this.isOnline = false,
-    this.isActiveAI = false,*/
+    this.isActiveAI = false,
     required this.sectorId,
   });
 
@@ -22,9 +22,9 @@ class Device {
     return Device(
       id: json['id'],
       name: json['name_devices'],
-      /*token: json['token'],
+      token: json['token'],
       isOnline: json['is_online'],
-      isActiveAI: json['is_active_ai'],*/
+      isActiveAI: json['is_active_ai'],
       sectorId: json['sectors_id'],
     );
   }
@@ -34,9 +34,9 @@ class Device {
     return {
       'id': id,
       'name_devices': name,
-      /*'token': token,
+      'token': token,
       'is_online': isOnline,
-      'is_active_ai': isActiveAI,*/
+      'is_active_ai': isActiveAI,
       'sectors_id': sectorId,
     };
   }
